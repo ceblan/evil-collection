@@ -52,7 +52,9 @@
       "gj" 'compilation-next-error
       "gk" 'compilation-previous-error
       (kbd "C-j") 'compilation-next-error
+      (kbd "C-n") 'compilation-next-error
       (kbd "C-k") 'compilation-previous-error
+      (kbd "C-p") 'compilation-previous-error
       "[[" 'compilation-previous-file
       "]]" 'compilation-next-file
       "gr" 'recompile)))
