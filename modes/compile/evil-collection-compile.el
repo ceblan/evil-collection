@@ -55,6 +55,7 @@
       (kbd "C-n") 'compilation-next-error
       (kbd "C-k") 'compilation-previous-error
       (kbd "C-p") 'compilation-previous-error
+      (kbd "C-o") 'other-window
       "[[" 'compilation-previous-file
       "]]" 'compilation-next-file
       "gr" 'recompile)))
