@@ -69,6 +69,7 @@
     "Z" 'dired-do-compress
     "c" 'dired-do-compress-to
     "!" 'dired-do-shell-command
+		"f" 'swiper
     "&" 'dired-do-async-shell-command
     ;; Comparison commands
     "=" 'dired-diff
