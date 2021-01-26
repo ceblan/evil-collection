@@ -188,6 +188,7 @@
     (kbd "C-t f") 'image-dired-mark-tagged-files
     (kbd "C-t C-t") 'image-dired-dired-toggle-marked-thumbs
     (kbd "C-t e") 'image-dired-dired-edit-comment-and-tags
+    (kbd "C-o") 'other-window
     ;; encryption and decryption (epa-dired)
     ";d" 'epa-dired-do-decrypt
     ";v" 'epa-dired-do-verify

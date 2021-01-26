@@ -90,12 +90,12 @@
     "+" 'ibuffer-add-to-tmp-show
     "X" 'ibuffer-bury-buffer
     (kbd ",") 'ibuffer-toggle-sorting-mode
-    (kbd "o i") 'ibuffer-invert-sorting
-    (kbd "o a") 'ibuffer-do-sort-by-alphabetic
-    (kbd "o v") 'ibuffer-do-sort-by-recency
-    (kbd "o s") 'ibuffer-do-sort-by-size
-    (kbd "o f") 'ibuffer-do-sort-by-filename/process
-    (kbd "o m") 'ibuffer-do-sort-by-major-mode
+    (kbd "f i") 'ibuffer-invert-sorting
+    (kbd "f a") 'ibuffer-do-sort-by-alphabetic
+    (kbd "f v") 'ibuffer-do-sort-by-recency
+    (kbd "f s") 'ibuffer-do-sort-by-size
+    (kbd "f f") 'ibuffer-do-sort-by-filename/process
+    (kbd "f m") 'ibuffer-do-sort-by-major-mode
 
     (kbd "s RET") 'ibuffer-filter-by-mode
     (kbd "s m") 'ibuffer-filter-by-used-mode
@@ -183,7 +183,8 @@
 
     (kbd "RET") 'ibuffer-visit-buffer
     (kbd "go") 'ibuffer-visit-buffer-other-window
-    (kbd "C-o") 'ibuffer-visit-buffer-other-window-noselect
+    (kbd "C-o") 'other-window
+    (kbd "o") 'ibuffer-visit-buffer-other-window-noselect
     (kbd "M-o") 'ibuffer-visit-buffer-1-window
     (kbd "gv") 'ibuffer-do-view
     (kbd "gV") 'ibuffer-do-view-horizontally
