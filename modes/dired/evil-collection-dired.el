@@ -42,6 +42,7 @@
   "Set up `evil' bindings for `dired'."
   (evil-collection-define-key 'normal 'dired-mode-map
     "q" 'quit-window
+		[escape] 'quit-window
     "j" 'dired-next-line
     "k" 'dired-previous-line
     [mouse-2] 'dired-mouse-find-file-other-window

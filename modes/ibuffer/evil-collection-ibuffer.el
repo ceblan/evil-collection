@@ -190,6 +190,7 @@
     (kbd "gV") 'ibuffer-do-view-horizontally
 
     ;; Quit
+		[escape] 'quit-window
     "q" 'quit-window
     "ZZ" 'quit-window
     "ZQ" 'quit-window))
