@@ -44,7 +44,9 @@
     "q" 'quit-window
 		[escape] 'quit-window
     "j" 'dired-next-line
+		(kbd "C-n") 'dired-next-line
     "k" 'dired-previous-line
+		(kbd "C-p") 'dired-previous-line
     [mouse-2] 'dired-mouse-find-file-other-window
     [follow-link] 'mouse-face
     ;; Commands to mark or flag certain categories of files

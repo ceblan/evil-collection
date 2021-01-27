@@ -43,6 +43,10 @@
                   'ibuffer-mark-for-delete-backwards))
 
   (evil-collection-define-key 'normal 'ibuffer-mode-map
+
+		(kbd "C-n") 'evil-next-line
+		(kbd "C-p") 'evil-previous-line
+
     (kbd "=") 'ibuffer-diff-with-file
     (kbd "J") 'ibuffer-jump-to-buffer
     (kbd "M-g") 'ibuffer-jump-to-buffer
