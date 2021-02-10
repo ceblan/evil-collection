@@ -147,7 +147,8 @@
     "gO" 'dired-find-file-other-window
     "go" 'dired-view-file
     ;; sort
-    "o" 'dired-sort-toggle-or-edit
+    ;;"o" 'dired-sort-toggle-or-edit
+    "o" 'dired-find-file-other-window
     ;; moving
     "gj" 'dired-next-dirline
     "gk" 'dired-prev-dirline
