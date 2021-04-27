@@ -163,7 +163,8 @@ Evil version of `sly-eval-print-last-expression' that accounts for
     "q" 'sly-inspector-quit)
 
   (evil-collection-define-key 'normal 'sly-mode-map
-    (kbd "K") 'sly-describe-symbol
+    ;;(kbd "K") 'sly-describe-symbol
+    (kbd "C-d") 'sly-describe-symbol
     (kbd "C-t") 'sly-pop-find-definition-stack
     ;; goto
     "gd" 'sly-edit-definition
