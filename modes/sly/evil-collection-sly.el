@@ -164,9 +164,10 @@ Evil version of `sly-eval-print-last-expression' that accounts for
 
   (evil-collection-define-key 'normal 'sly-mode-map
     ;;(kbd "K") 'sly-describe-symbol
-    (kbd "C-d") 'sly-describe-symbol
+    ;;(kbd "C-d") 'sly-describe-symbol
     (kbd "C-t") 'sly-pop-find-definition-stack
     ;; goto
+    "ge" 'sly-describe-symbol
     "gd" 'sly-edit-definition
     "gz" 'sly-mrepl)
 
