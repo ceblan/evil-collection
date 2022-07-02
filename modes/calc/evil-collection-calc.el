@@ -6,7 +6,7 @@
 ;; Maintainer: James Nguyen <james@jojojames.com>, Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, calc, tools
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -71,7 +71,7 @@
     (kbd "M-m t") 'calc-total-algebraic-mode
     (kbd "<delete>") 'calc-pop
     (kbd "<mouse-2>") 'calc-yank
-    (kbd "<backspace>") 'calc-pop ; was "C-d".
+    (kbd "DEL") 'calc-pop ; was "C-d"
     "d" 'calc-kill                      ; was "C-k"
     "u" 'calc-undo                      ; was "U"
     "X" 'calc-call-last-kbd-macro       ; "@" is already used.

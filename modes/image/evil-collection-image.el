@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, bookmark, tools
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -41,10 +41,10 @@
     ;; motion
     "gg" 'image-bob
     "G" 'image-eob
-    "h" 'image-backward-hscroll
-    "l" 'image-forward-hscroll
-    "j" 'image-next-line
-    "k" 'image-previous-line
+    [remap evil-forward-char] 'image-forward-hscroll
+    [remap evil-backward-char] 'image-backward-hscroll
+    [remap evil-next-line] 'image-next-line
+    [remap evil-previous-line] 'image-previous-line
     "0" 'image-bol
     "^" 'image-bol
     "$" 'image-eol
@@ -65,6 +65,10 @@
 
     "H" 'image-transform-fit-to-height
     "W" 'image-transform-fit-to-width
+
+    "+" 'image-increase-size
+    "=" 'image-increase-size
+    "-" 'image-decrease-size
 
     "[[" 'image-previous-file
     "]]" 'image-next-file

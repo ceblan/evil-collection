@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, elisp, lisp
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -83,7 +83,11 @@ alternative printed representations that can be displayed."
 
   (evil-set-initial-state 'emacs-lisp-mode 'normal)
   (evil-collection-define-key 'normal 'emacs-lisp-mode-map
-    "gz" 'evil-collection-elisp-mode-ielm-repl))
+    "gz" 'evil-collection-elisp-mode-ielm-repl)
+
+  (when evil-collection-want-find-usages-bindings
+    (evil-collection-define-key 'normal 'emacs-lisp-mode-map
+      "gr" 'xref-find-references)))
 
 (provide 'evil-collection-elisp-mode)
 ;;; evil-collection-elisp-mode.el ends here

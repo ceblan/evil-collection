@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, calendar, tools
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -35,6 +35,7 @@
 (defun evil-collection-calendar-setup-org-bindings ()
   "Bind Org functions to Calendar keymap."
   (require 'org)
+  (require 'org-agenda)
   (defvar org-calendar-to-agenda-key)
   (defvar org-agenda-diary-file)
   (defvar org-calendar-insert-diary-entry-key)
@@ -60,6 +61,11 @@
                  (_ ""))))
       (evil-collection-define-key 'normal 'calendar-mode-map
         (kbd key) 'org-agenda-diary-entry))))
+
+;; Otherwise it will load tons of org stuff at startup.
+(defvar evil-collection-calendar-want-org-bindings)
+(when evil-collection-calendar-want-org-bindings
+  (add-hook 'calendar-mode-hook #'evil-collection-calendar-setup-org-bindings))
 
 ;;;###autoload
 (defun evil-collection-calendar-setup ()
@@ -134,11 +140,7 @@
     ;; quit
     "q" 'calendar-exit
     "ZQ" 'evil-quit
-    "ZZ" 'calendar-exit)
-
-  (defvar evil-collection-calendar-want-org-bindings)
-  (when evil-collection-calendar-want-org-bindings
-    (evil-collection-calendar-setup-org-bindings)))
+    "ZZ" 'calendar-exit))
 
 (provide 'evil-collection-calendar)
 ;;; evil-collection-calendar.el ends here

@@ -8,7 +8,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, vterm, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -32,6 +32,11 @@
 (require 'vterm nil t)
 
 (defconst evil-collection-vterm-maps '(vterm-mode-map))
+
+(declare-function vterm-goto-char "vterm")
+(declare-function vterm--get-prompt-point "vterm")
+(declare-function vterm--get-end-of-line "vterm")
+(declare-function vterm-delete-region "vterm")
 
 (defvar vterm--process)
 
@@ -61,6 +66,152 @@ also uses `evil-mode'."
                    (if evil-collection-vterm-send-escape-to-vterm-p
                        "vterm"
                      "emacs"))))
+
+(declare-function vterm-cursor-in-command-buffer-p "vterm")
+(declare-function vterm-beginning-of-line "vterm")
+
+(evil-define-motion evil-collection-vterm-first-non-blank ()
+  "Move the cursor to the first non-blank character
+after the prompt."
+  :type exclusive
+  (if (vterm-cursor-in-command-buffer-p (point))
+      (vterm-beginning-of-line)
+    (evil-first-non-blank)))
+
+(defun evil-collection-vterm-insert ()
+  "Insert character before cursor."
+  (interactive)
+  (vterm-goto-char (point))
+  (call-interactively #'evil-insert))
+
+(defun evil-collection-vterm-insert-line ()
+  "Insert character at beginning of prompt."
+  (interactive)
+  (vterm-goto-char (vterm--get-prompt-point))
+  (call-interactively #'evil-insert))
+
+(defun evil-collection-vterm-append ()
+  "Append character after cursor."
+  (interactive)
+  (vterm-goto-char (point))
+  (call-interactively #'evil-append))
+
+(defun evil-collection-vterm-append-line ()
+  "Append character at end-of-line."
+  (interactive)
+  (vterm-goto-char (vterm--get-end-of-line))
+  (call-interactively #'evil-append))
+
+(declare-function vterm-yank "vterm")
+
+(defun evil-collection-vterm-paste-after (&optional arg)
+  (interactive "P")
+  (vterm-goto-char (+ 1 (point)))
+  (call-interactively #'vterm-yank arg))
+
+(declare-function vterm-reset-cursor-point "vterm")
+
+(evil-define-operator evil-collection-vterm-delete (beg end type register yank-handler)
+  "Modification of evil-delete to work in vterm buffer.
+Delete text from BEG to END with TYPE.
+Save in REGISTER or in the kill-ring with YANK-HANDLER."
+  (interactive "<R><x><y>")
+  (let* ((beg (max (or beg (point)) (vterm--get-prompt-point)))
+         (end (min (or end beg) (vterm--get-end-of-line))))
+    (unless register
+      (let ((text (filter-buffer-substring beg end)))
+        (unless (string-match-p "\n" text)
+          ;; set the small delete register
+          (evil-set-register ?- text))))
+    (let ((evil-was-yanked-without-register nil))
+      (evil-yank beg end type register yank-handler))
+    (cond
+     ((eq type 'block)
+      (evil-apply-on-block #'vterm-delete-region beg end nil))
+     ((and (eq type 'line)
+           (= end (point-max))
+           (or (= beg end)
+               (/= (char-before end) ?\n))
+           (/= beg (point-min))
+           (=  (char-before beg) ?\n))
+      (vterm-delete-region (1- beg) end))
+     (t
+      (vterm-delete-region beg end)))
+    ;; place cursor on beginning of line
+    (when (and (called-interactively-p 'any)
+               (eq type 'line))
+      (vterm-reset-cursor-point))))
+
+(evil-define-operator evil-collection-vterm-delete-backward-char (beg end type register)
+  "Delete previous character."
+  :motion evil-backward-char
+  (interactive "<R><x>")
+  (evil-collection-vterm-delete beg end type register))
+
+(evil-define-operator evil-collection-vterm-delete-char (beg end type register)
+  "Delete current character."
+  :motion evil-delete-char
+  (interactive "<R><x>")
+  (evil-collection-vterm-delete beg end type register))
+
+(evil-define-operator evil-collection-vterm-delete-line (beg end type register yank-handler)
+  "Modification of evil-delete line to work in vterm bufer. Delete to end of line."
+  :motion nil
+  :keep-visual t
+  (interactive "<R><x>")
+  ;; act linewise in Visual state
+  (let* ((beg (or beg (point)))
+         (end (or end beg))
+         (visual-line-mode (and evil-respect-visual-line-mode
+                                visual-line-mode))
+         (line-end (if visual-line-mode
+                       (save-excursion
+                         (end-of-visual-line)
+                         (point))
+                     (line-end-position))))
+    (when (evil-visual-state-p)
+      (unless (memq type '(line screen-line block))
+        (let ((range (evil-expand beg end
+                                  (if visual-line-mode
+                                      'screen-line
+                                    'line))))
+          (setq beg (evil-range-beginning range)
+                end (evil-range-end range)
+                type (evil-type range))))
+      (evil-exit-visual-state))
+    (cond
+     ((eq type 'block)
+      ;; equivalent to $d, i.e., we use the block-to-eol selection and
+      ;; call `evil-collection-vterm-delete'. In this case we fake the call to
+      ;; `evil-end-of-line' by setting `temporary-goal-column' and
+      ;; `last-command' appropriately as `evil-end-of-line' would do.
+      (let ((temporary-goal-column most-positive-fixnum)
+            (last-command 'next-line))
+        (evil-collection-vterm-delete beg end 'block register yank-handler)))
+     ((memq type '(line screen-line))
+      (evil-collection-vterm-delete beg end type register yank-handler))
+     (t
+      (evil-collection-vterm-delete beg line-end type register yank-handler)))))
+
+(evil-define-operator evil-collection-vterm-change (beg end type register yank-handler)
+  (evil-collection-vterm-delete beg end type register yank-handler)
+  (evil-collection-vterm-insert))
+
+(evil-define-operator evil-collection-vterm-change-line (beg end type register yank-handler)
+  :motion evil-end-of-line-or-visual-line
+  (evil-collection-vterm-delete-line beg end type register yank-handler)
+  (evil-collection-vterm-insert))
+
+(evil-define-operator evil-collection-vterm-substitute (beg end type register)
+  :motion evil-forward-char
+  (interactive "<R><x>")
+  (evil-collection-vterm-change beg end type register))
+
+(evil-define-operator evil-collection-vterm-substitute-line (beg end register yank-handler)
+  :motion evil-line-or-visual-line
+  :type line
+  (interactive "<r><x>")
+  (evil-collection-vterm-change beg end 'line register yank-handler))
 
 ;;;###autoload
 (defun evil-collection-vterm-setup ()
@@ -100,8 +251,27 @@ also uses `evil-mode'."
   (evil-collection-define-key 'normal 'vterm-mode-map
     "[[" 'vterm-previous-prompt
     "]]" 'vterm-next-prompt
-    "p" 'vterm-yank
-    "u" 'vterm-undo))
+    "p" 'evil-collection-vterm-paste-after
+    "P" 'vterm-yank
+    "a" 'evil-collection-vterm-append
+    "A" 'evil-collection-vterm-append-line
+    "d" 'evil-collection-vterm-delete
+    "D" 'evil-collection-vterm-delete-line
+    "x" 'evil-collection-vterm-delete-char
+    "X" 'evil-collection-vterm-delete-backward-char
+    (kbd "RET") 'vterm-send-return
+    "^" 'evil-collection-vterm-first-non-blank
+    "i" 'evil-collection-vterm-insert
+    "I" 'evil-collection-vterm-insert-line
+    "u" 'vterm-undo
+    "c" 'evil-collection-vterm-change
+    "C" 'evil-collection-vterm-change-line
+    "s" 'evil-collection-vterm-substitute
+    "S" 'evil-collection-vterm-substitute-line)
+
+  (evil-collection-define-key 'visual 'vterm-mode-map
+    "d" 'evil-collection-vterm-delete
+    "x" 'evil-collection-vterm-delete-backward-char))
 
 (provide 'evil-collection-vterm)
 ;;; evil-collection-vterm.el ends here

@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, dired, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -109,9 +109,6 @@
     "*/" 'dired-mark-directories
     "*@" 'dired-mark-symlinks
     "*%" 'dired-mark-files-regexp
-    "*(" 'dired-mark-sexp
-    "*." 'dired-mark-extension
-    "*O" 'dired-mark-omitted
     "*c" 'dired-change-marks
     "*s" 'dired-mark-subdir-files
     "*m" 'dired-mark
@@ -202,6 +199,13 @@
     ";v" 'epa-dired-do-verify
     ";s" 'epa-dired-do-sign
     ";e" 'epa-dired-do-encrypt)
+
+  ;; dired-x commands
+  (with-eval-after-load 'dired-x
+    (evil-collection-define-key 'normal 'dired-mode-map
+      "*(" 'dired-mark-sexp
+      "*." 'dired-mark-extension
+      "*O" 'dired-mark-omitted))
 
   ;; dired-narrow commands
   (with-eval-after-load 'dired-narrow

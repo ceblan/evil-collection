@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, eww, tools
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -44,7 +44,7 @@
     "^" 'eww-up-url
     "u" 'eww-up-url
     "U" 'eww-top-url
-    (kbd "<backspace>") 'eww-back-url
+    (kbd "DEL") 'eww-back-url
     "H" 'eww-back-url
     "L" 'eww-forward-url
 
@@ -89,15 +89,8 @@
     "ZQ" 'quit-window
     "ZZ" 'quit-window)
 
-  (evil-collection-define-key 'operator 'eww-mode-map
-    "u" '(menu-item
-          ""
-          nil
-          :filter (lambda (&optional _)
-                    (when (memq evil-this-operator
-                                evil-collection-yank-operators)
-                      (setq evil-inhibit-operator t)
-                      #'eww-copy-page-url))))
+  (evil-collection-define-operator-key 'yank 'eww-mode-map
+    "u" 'eww-copy-page-url)
 
   (evil-collection-set-readonly-bindings 'eww-history-mode-map)
   (evil-set-initial-state 'eww-history-mode 'normal)
@@ -128,15 +121,8 @@
     ;; refresh
     "gr" 'revert-buffer)
 
-  (evil-collection-define-key 'operator 'eww-bookmark-mode-map
-    "u" '(menu-item
-          ""
-          nil
-          :filter (lambda (&optional _)
-                    (when (memq evil-this-operator
-                                evil-collection-yank-operators)
-                      (setq evil-inhibit-operator t)
-                      #'eww-copy-page-url)))))
+  (evil-collection-define-operator-key 'yank 'eww-bookmark-mode-map
+    "u" 'eww-copy-page-url))
 
 (provide 'evil-collection-eww)
 ;;; evil-collection-eww.el ends here

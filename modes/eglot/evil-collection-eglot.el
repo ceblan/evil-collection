@@ -6,7 +6,7 @@
 ;; Maintainer: James Nguyen <james@jojojames.com>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, eglot, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -37,7 +37,11 @@
   (evil-collection-define-key 'normal 'eglot-mode-map
     "gd" 'xref-find-definitions
     (kbd "C-t") 'xref-pop-marker-stack
-    "K" 'eldoc-doc-buffer))
+    "K" 'eldoc-doc-buffer)
+
+  (when evil-collection-want-find-usages-bindings
+    (evil-collection-define-key 'normal 'eglot-mode-map
+      "gr" 'xref-find-references)))
 
 (provide 'evil-collection-eglot)
 ;;; evil-collection-eglot.el ends here

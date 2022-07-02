@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, emacs, tools, realgud
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -81,7 +81,7 @@
     "e" 'realgud:cmd-eval-dwim
     "E" 'realgud:cmd-eval-at-point
     "U" 'realgud:cmd-until
-    "H" 'realgud:cmd-until
+    "H" 'realgud:cmd-until-here
     [mouse-2] 'realgud:tooltip-eval
     [left-fringe mouse-1] 'realgud-cmds--mouse-add-remove-bp
     [left-margin mouse-1] 'realgud-cmds--mouse-add-remove-bp

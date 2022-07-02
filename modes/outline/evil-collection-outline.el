@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, outline, tools
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -48,7 +48,7 @@ For example, \"zB\" is bound to `outline-hide-body' in Outline
 mode. To turn off this specific binding in Outline minor mode,
 you can do:
 
-    (evil-define-minor-mode-key 'normal 'outline-minor-mode \"zB\" nil)"
+    (evil-define-minor-mode-key \='normal \='outline-minor-mode \"zB\" nil)"
   :group 'evil-collection-outline
   :type 'boolean)
 

@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, compile, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -37,6 +37,7 @@
 (defun evil-collection-compile-setup ()
   "Set up `evil' bindings for `compile'."
   (evil-set-initial-state 'compilation-mode 'normal)
+  (evil-collection-set-readonly-bindings 'compilation-mode-map)
 
   (dolist (keymap evil-collection-compile-maps)
 
@@ -48,6 +49,9 @@
 
       "go" 'compilation-display-error
       (kbd "S-<return>") 'compilation-display-error
+
+      (kbd "TAB") 'compilation-next-error
+      (kbd "S-TAB") 'compilation-previous-error
 
       "gj" 'compilation-next-error
       "gk" 'compilation-previous-error

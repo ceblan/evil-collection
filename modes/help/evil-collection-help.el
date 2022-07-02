@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, help, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -68,7 +68,13 @@
     "gr" 'revert-buffer
     "<" 'help-go-back
     ">" 'help-go-forward
-    "r" 'help-follow))
+    "r" 'help-follow)
+
+  (when (>= emacs-major-version 28)
+    (evil-collection-define-key 'normal 'help-mode-map
+      "s" 'help-view-source
+      "i" 'help-goto-info
+      "c" 'help-customize)))
 
 (provide 'evil-collection-help)
 ;;; evil-collection-help.el ends here

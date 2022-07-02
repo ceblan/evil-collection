@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, ibuffer, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -60,7 +60,7 @@
     (kbd "u") 'ibuffer-unmark-forward
     (kbd "DEL") 'ibuffer-unmark-backward
     (kbd "M-DEL") 'ibuffer-unmark-all
-    (kbd "* *") 'ibuffer-unmark-all
+    (kbd "* *") 'ibuffer-mark-special-buffers
     (kbd "* c") 'ibuffer-change-marks
     (kbd "U") 'ibuffer-unmark-all-marks
     (kbd "* M") 'ibuffer-mark-by-mode
@@ -161,7 +161,7 @@
 
     (kbd "|") 'ibuffer-do-shell-command-pipe
     (kbd "!") 'ibuffer-do-shell-command-file
-    (kbd "t") 'ibuffer-do-toggle-modified
+    (kbd "t") 'ibuffer-toggle-marks
     ;; marked operations
     (kbd "A") 'ibuffer-do-view
     (kbd "D") 'ibuffer-do-delete

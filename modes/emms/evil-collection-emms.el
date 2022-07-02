@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, emms, tools
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -32,12 +32,14 @@
 
 (declare-function emms-with-inhibit-read-only-t "emms")
 (declare-function emms-playlist-mode-correct-previous-yank "emms-playlist-mode")
+(declare-function emms-playlist-mode-yank "emms-playlist-mode")
 
 (defvar emms-browser-mode-map)
 (defvar emms-playlist-mode-map)
 
 (defconst evil-collection-emms-maps '(emms-browser-mode-map
                                       emms-playlist-mode-map
+                                      emms-browser-search-mode-map
                                       emms-metaplaylist-mode-map
                                       emms-stream-mode-map))
 
@@ -59,7 +61,7 @@ The return value is the yanked text."
   (interactive)
   (emms-with-inhibit-read-only-t
    (goto-char (point-at-bol))
-   (yank)
+   (emms-playlist-mode-yank)
    (emms-playlist-mode-correct-previous-yank)
    (evil-previous-line)
    (evil-beginning-of-line)))
@@ -143,7 +145,12 @@ The return value is the yanked text."
     "C" 'emms-browser-clear-playlist
     "D" 'emms-browser-delete-files
     "d" 'emms-browser-view-in-dired
-    "gd" 'emms-browser-view-in-dired)) ; "d" does the same, keep "gd" for consistency.
+    ;; "d" does the same, keep "gd" for consistency.
+    "gd" 'emms-browser-view-in-dired)
+
+  (unless evil-collection-always-run-setup-hook-after-load
+    (run-hook-with-args 'evil-collection-setup-hook
+                        'emms '(emms-browser-mode-map))))
 
 ;;;###autoload
 (defun evil-collection-emms-playlist-setup ()
@@ -204,7 +211,11 @@ The return value is the yanked text."
 
   (evil-collection-define-key 'visual 'emms-playlist-mode-map
     ;; "d" 'emms-playlist-mode-kill
-    "D" 'emms-playlist-mode-kill))
+    "D" 'emms-playlist-mode-kill)
+
+  (unless evil-collection-always-run-setup-hook-after-load
+    (run-hook-with-args 'evil-collection-setup-hook
+                        'emms '(emms-playlist-mode-map))))
 
 ;;;###autoload
 (defun evil-collection-emms-setup ()
@@ -242,7 +253,14 @@ The return value is the yanked text."
     "i" 'emms-stream-info-bookmark
     "s" 'emms-stream-save-bookmarks-file
     "x" 'emms-stream-toggle-default-action
-    "q" 'emms-stream-quit))
+    "q" 'emms-stream-quit)
+
+  (unless evil-collection-always-run-setup-hook-after-load
+    (run-hook-with-args
+     'evil-collection-setup-hook 'emms
+     '(emms-browser-search-mode-map
+       emms-metaplaylist-mode-map
+       emms-stream-mode-map))))
 
 (provide 'evil-collection-emms)
 ;;; evil-collection-emms.el ends here

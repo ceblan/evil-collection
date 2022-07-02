@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, w3m, tools
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -77,24 +77,11 @@
     "ZQ" 'w3m-quit
     "ZZ" 'quit-window)
 
-  (evil-collection-define-key 'operator 'w3m-mode-map
-    "t" '(menu-item
-          ""
-          nil
-          :filter (lambda (&optional _)
-                    (when (memq evil-this-operator
-                                evil-collection-yank-operators)
-                      (setq evil-inhibit-operator t)
-                      #'w3m-print-this-url))))
-  (evil-collection-define-key 'operator 'w3m-mode-map
-    "u" '(menu-item
-          ""
-          nil
-          :filter (lambda (&optional _)
-                    (when (memq evil-this-operator
-                                evil-collection-yank-operators)
-                      (setq evil-inhibit-operator t)
-                      #'w3m-print-current-url)))))
+  (evil-collection-define-operator-key 'yank 'w3m-mode-map
+    ;; yt
+    "t" 'w3m-print-this-url
+    ;; yu
+    "u" 'w3m-print-current-url))
 
 (provide 'evil-collection-w3m)
 ;;; evil-collection-w3m.el ends here

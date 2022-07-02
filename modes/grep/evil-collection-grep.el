@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, emacs, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -38,8 +38,12 @@
   (evil-collection-define-key 'normal 'grep-mode-map
     "n" 'evil-search-next
     "\C-j" 'next-error-no-select
-    "\C-k" 'previous-error-no-select))
+    "\C-k" 'previous-error-no-select)
 
+  ;; `wgrep' integration
+  (when (fboundp 'wgrep-setup)
+    (evil-collection-define-key 'normal 'grep-mode-map
+      "i" 'wgrep-change-to-wgrep-mode)))
 
 (provide 'evil-collection-grep)
 ;;; evil-collection-grep.el ends here

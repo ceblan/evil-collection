@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, debug, tools
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -66,7 +66,10 @@
     "p" (if (fboundp 'debugger-toggle-locals)
             'debugger-toggle-locals
           'backtrace-toggle-locals)
-
+    
+    "zo" 'backtrace-multi-line
+    "zc" 'backtrace-single-line
+    
     ;; quit
     "q" 'top-level
     "ZQ" 'evil-quit

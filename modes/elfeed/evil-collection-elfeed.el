@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, elfeed, tools
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -56,6 +56,7 @@
     ;; filter
     "s" 'elfeed-search-live-filter
     "S" 'elfeed-search-set-filter
+    "c" 'elfeed-search-clear-filter
 
     ;; refresh
     "gR" 'elfeed-search-fetch ; TODO: Which update function is more useful?
@@ -107,16 +108,9 @@
     "ZQ" 'elfeed-kill-buffer
     "ZZ" 'elfeed-kill-buffer)
 
-  (evil-collection-define-key 'operator 'elfeed-show-mode-map
-    ;; Like `eww'.
-    "u" '(menu-item
-          ""
-          nil
-          :filter (lambda (&optional _)
-                    (when (memq evil-this-operator
-                                evil-collection-yank-operators)
-                      (setq evil-inhibit-operator t)
-                      #'elfeed-show-yank)))))
+  ;; yu, like `eww'
+  (evil-collection-define-operator-key 'yank 'elfeed-show-mode-map
+    "u" 'elfeed-show-yank))
 
 (provide 'evil-collection-elfeed)
 ;;; evil-collection-elfeed.el ends here

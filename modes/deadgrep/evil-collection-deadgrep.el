@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, emacs, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -46,6 +46,8 @@
     "gr" 'deadgrep-restart
     (kbd "C-j") 'deadgrep-forward
     (kbd "C-k") 'deadgrep-backward
+    "gj" 'deadgrep-forward
+    "gk" 'deadgrep-backward
     (kbd "TAB") 'deadgrep-toggle-file-results
 
     "i" 'deadgrep-edit-mode

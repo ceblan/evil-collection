@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.2
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, emacs, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -53,10 +53,12 @@
   (evil-collection-define-key 'normal 'restclient-mode-map
     "[[" 'restclient-jump-prev
     "]]" 'restclient-jump-next)
-  ;; Enable a separate minor mode so that we can bind keys to it.
   (evil-collection-define-key 'normal 'evil-collection-restclient-mode-map
-    "q" 'quit-window)
+    "q" #'quit-window
+    "ZZ" #'quit-window
+    "ZQ" #'evil-quit)
 
+  ;; Enable a separate minor mode so that we can bind keys to it.
   (add-hook 'restclient-response-loaded-hook
             #'evil-collection-restclient-setup-result-mode))
 

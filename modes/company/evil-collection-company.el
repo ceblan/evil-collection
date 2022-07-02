@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, company, abbrev, convenience, matching
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -30,29 +30,20 @@
 (require 'company nil t)
 (require 'evil-collection)
 
-;; TODO: `company-tng-configure-default' will be replaced by `company-tng-mode' in 0.9.14.
-;; See https://github.com/company-mode/company-mode/blob/master/NEWS.md
-(declare-function company-tng-configure-default "company-tng")
 (declare-function company-tng-mode "company-tng")
+(declare-function company-grab-line "company")
+(declare-function company-begin-backend "company")
 
 (defgroup evil-collection-company nil
   "Evil bindings for `company-mode'."
   :group 'evil-collection)
 
-(defcustom evil-collection-company-use-tng t
-  "Enable company-tng through `company-tng-configure-default'.
-
-This mirrors ycmd's behavior for a completion experience more
-similar to YouCompleteMe.
-
-Note that for changes to take effect, this variable may have to
-be set through custom or before evil-collection loads."
-  :group 'evil-collection-company
-  :type 'boolean)
-
 (defcustom evil-collection-company-supported-states '(insert replace emacs)
   "The `evil-state's which `company' function can be requested."
   :type '(repeat symbol))
+(defcustom evil-collection-want-company-extended-keybindings nil
+  "The \='evil-company-extended' keybindings should be requested"
+  :type 'boolean)
 
 (defvar company-active-map)
 (defvar company-search-map)
@@ -62,9 +53,30 @@ be set through custom or before evil-collection loads."
 (defun evil-collection-company-supported-p (command &rest _)
   "Return non-nil if `evil-state' is in supported states."
   (cond
-    ((eq command 'prefix)
-     (memq evil-state evil-collection-company-supported-states))
-    (t t)))
+   ((not (bound-and-true-p evil-mode)) t)
+   ((eq command 'prefix)
+    (memq evil-state evil-collection-company-supported-states))
+   (t t)))
+
+;;;###autoload
+(defun evil-collection-company-whole-lines (command &optional arg &rest ignored)
+  "`company-mode' completion backend that completes whole-lines, akin to vim's
+C-x C-l."
+  (interactive (list 'interactive))
+  (require 'company)
+  (pcase command
+    (`interactive (company-begin-backend 'evil-collection-company-whole-lines))
+    (`prefix      (company-grab-line "^[\t\s]*\\(.+\\)" 1))
+    (`candidates
+     (all-completions
+      arg
+      (delete-dups
+       (split-string
+        (replace-regexp-in-string
+         "^[\t\s]+" ""
+         (concat (buffer-substring-no-properties (point-min) (line-beginning-position))
+                 (buffer-substring-no-properties (line-end-position) (point-max))))
+        "\\(\r\n\\|[\n\r]\\)" t))))))
 
 ;;;###autoload
 (defun evil-collection-company-setup ()
@@ -77,11 +89,21 @@ be set through custom or before evil-collection loads."
     (kbd "M-j") 'company-select-next
     (kbd "M-k") 'company-select-previous)
 
+  (when evil-collection-want-company-extended-keybindings 
+    (evil-collection-define-key nil 'company-active-map
+      (kbd "C-l") 'evil-collection-company-whole-lines
+      (kbd "C-]") 'company-etags
+      (kbd "C-f") 'company-files
+      (kbd "C-o") 'company-capf
+      (kbd "C-s") 'company-ispell))
+
   (when evil-want-C-u-scroll
-    (evil-collection-define-key nil 'company-active-map (kbd "C-u") 'company-previous-page))
+    (evil-collection-define-key nil 'company-active-map
+      (kbd "C-u") 'company-previous-page))
 
   (when evil-want-C-d-scroll
-    (evil-collection-define-key nil 'company-active-map (kbd "C-d") 'company-next-page))
+    (evil-collection-define-key nil 'company-active-map
+      (kbd "C-d") 'company-next-page))
 
   (evil-collection-define-key nil 'company-search-map
     (kbd "C-j") 'company-select-next-or-abort
@@ -90,15 +112,10 @@ be set through custom or before evil-collection loads."
     (kbd "M-k") 'company-select-previous
     (kbd "<escape>") 'company-search-abort)
 
-  ;; Sets up YCMD like behavior.
-  (when evil-collection-company-use-tng
-    (require 'company-tng)
-    (if (fboundp 'company-tng-mode)
-        (company-tng-mode +1)
-      (company-tng-configure-default)))
-
   ;; Make `company-mode' not show popup when not in supported state
-  (advice-add 'company-call-backend :before-while 'evil-collection-company-supported-p))
+  (advice-add 'company-call-backend
+              :before-while 'evil-collection-company-supported-p))
+
 
 (provide 'evil-collection-company)
 ;;; evil-collection-company.el ends here

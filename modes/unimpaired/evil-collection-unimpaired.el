@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, unimpaired, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -30,6 +30,9 @@
 ;;; Code:
 (require 'evil-collection)
 
+;; Externals
+(defvar flycheck-current-errors)
+
 (defgroup evil-collection-unimpaired nil
   "Evil port of unimpaired for `evil-collection'."
   :group 'evil-collection)
@@ -40,10 +43,9 @@
   "Keymap for `evil-collection-unimpaired-mode'.")
 
 (define-minor-mode evil-collection-unimpaired-mode
-  ""
-  nil
-  nil
-  evil-collection-unimpaired-mode-map)
+  "Evil port of unimpaired."
+  :lighter " unimpaired"
+  :group 'evil-collection-unimpaired)
 
 ;;;###autoload
 (define-global-minor-mode global-evil-collection-unimpaired-mode
@@ -54,31 +56,94 @@
   "Turn on `evil-collection-unimpaired-mode'."
   (evil-collection-unimpaired-mode 1))
 
-(defun evil-collection-unimpaired-next-error ()
+(evil-define-motion evil-collection-unimpaired-next-error (count)
   "Go to next error."
-  (interactive)
+  :jump t
+  (setq count (or count 1))
   (cond
    ((and (bound-and-true-p flycheck-mode)
          (fboundp 'flycheck-next-error))
-    (flycheck-next-error))
+    (flycheck-next-error count))
    ((and (bound-and-true-p flymake-mode)
          (fboundp 'flymake-goto-next-error))
-    (flymake-goto-next-error))
+    (flymake-goto-next-error count))
    (:default
     (message "No linting modes are on."))))
 
-(defun evil-collection-unimpaired-previous-error ()
+(evil-define-motion evil-collection-unimpaired-previous-error (count)
   "Go to previous error."
-  (interactive)
+  :jump t
+  (evil-collection-unimpaired-next-error (- (or count 1))))
+
+(defun evil-collection-unimpaired--flycheck-count-errors ()
+  "Count the number of flycheck errors."
+  (length (delete-dups (mapcar 'flycheck-error-line flycheck-current-errors))))
+
+(evil-define-motion evil-collection-unimpaired-first-error ()
+  "Go to the first error."
+  :jump t
   (cond
    ((and (bound-and-true-p flycheck-mode)
-         (fboundp 'flycheck-previous-error))
-    (flycheck-previous-error))
-   ((and (bound-and-true-p flymake-mode)
-         (fboundp 'flymake-goto-prev-error))
-    (flymake-goto-prev-error))
+         (fboundp 'flycheck-first-error))
+    (flycheck-first-error))
+   ((bound-and-true-p flymake-mode)
+    (message "flymake unsupported."))
    (:default
     (message "No linting modes are on."))))
+
+(evil-define-motion evil-collection-unimpaired-last-error ()
+  "Go to the last error."
+  :jump t
+  (cond
+   ((and (bound-and-true-p flycheck-mode)
+         (fboundp 'flycheck-first-error))
+    (flycheck-first-error (evil-collection-unimpaired--flycheck-count-errors)))
+   ((bound-and-true-p flymake-mode)
+    (message "flymake unsupported."))
+   (:default
+    (message "No linting modes are on."))))
+
+(defconst evil-collection-unimpaired--SCM-conflict-marker "^\\(@@@ .* @@@\\|[<=>]\\{7\\}\\)"
+  "A regexp to match SCM conflict marker.")
+
+(evil-define-motion evil-collection-unimpaired-previous-SCM-conflict-marker (count)
+  "Go to the previous SCM conflict marker or diff/patch hunk."
+  :jump t
+  (evil-collection-unimpaired-next-SCM-conflict-marker (- (or count 1))))
+
+(evil-define-motion evil-collection-unimpaired-next-SCM-conflict-marker (count)
+  "Go to the next SCM conflict marker or diff/patch hunk."
+  :jump t
+  (evil-motion-loop (dir (or count 1))
+    (cond
+     ((> dir 0)
+      (forward-line 1)
+      (when (not (search-forward-regexp evil-collection-unimpaired--SCM-conflict-marker nil t))
+        (forward-line -1))
+      (move-beginning-of-line nil))
+     (t
+      (search-backward-regexp evil-collection-unimpaired--SCM-conflict-marker nil t)
+      (move-beginning-of-line nil)))))
+
+(defun evil-collection-unimpaired-paste-above ()
+  "Paste above current line with preserving indentation."
+  (interactive)
+  (let ((indent (current-indentation))
+        (column (current-column)))
+    (evil-insert-newline-above)
+    (indent-to indent)
+    (evil-paste-after 1)
+    (move-to-column column)))
+
+(defun evil-collection-unimpaired-paste-below ()
+  "Paste below current line with preserving indentation."
+  (interactive)
+  (let ((indent (current-indentation))
+        (column (current-column)))
+    (evil-insert-newline-below)
+    (indent-to indent)
+    (evil-paste-after 1)
+    (move-to-column column)))
 
 (defun evil-collection-unimpaired-insert-newline-above (count)
   "Insert COUNT blank line(s) above current line."
@@ -92,7 +157,7 @@
   (save-excursion (dotimes (_ count) (evil-insert-newline-below))))
 
 (defun evil-collection-unimpaired--encode (beg end fn)
-  "Apply FN in range from BEG to END."
+  "Apply FN from BEG to END."
   (save-excursion
     (goto-char beg)
     (let* ((end (if (eq evil-this-type 'line) (1- end) end))
@@ -111,6 +176,18 @@
   (interactive "<c><r>")
   (ignore count)
   (evil-collection-unimpaired--encode beg end #'url-unhex-string))
+
+(evil-define-operator evil-collection-unimpaired-b64-encode (count &optional beg end)
+  "Encode a base64 string."
+  (interactive "<c><r>")
+  (ignore count)
+  (evil-collection-unimpaired--encode beg end #'base64-encode-string))
+
+(evil-define-operator evil-collection-unimpaired-b64-decode (count &optional beg end)
+  "Decode a base64 string."
+  (interactive "<c><r>")
+  (ignore count)
+  (evil-collection-unimpaired--encode beg end #'base64-decode-string))
 
 ;; https://stackoverflow.com/questions/2423834/move-line-region-up-and-down-in-emacs
 (defun evil-collection-unimpaired--move-text (arg)
@@ -156,16 +233,32 @@
     "]b" 'evil-next-buffer
     "[e" 'evil-collection-unimpaired-move-text-up
     "]e" 'evil-collection-unimpaired-move-text-down
-    "]l" 'evil-collection-unimpaired-next-error
     "[l" 'evil-collection-unimpaired-previous-error
+    "]l" 'evil-collection-unimpaired-next-error
+    "[L" 'evil-collection-unimpaired-first-error
+    "]L" 'evil-collection-unimpaired-last-error
+    "[q" 'evil-collection-unimpaired-previous-error
+    "]q" 'evil-collection-unimpaired-next-error
+    "[Q" 'evil-collection-unimpaired-first-error
+    "]Q" 'evil-collection-unimpaired-last-error
+    "[n" 'evil-collection-unimpaired-previous-SCM-conflict-marker
+    "]n" 'evil-collection-unimpaired-next-SCM-conflict-marker
+    "[p" 'evil-collection-unimpaired-paste-above
+    "]p" 'evil-collection-unimpaired-paste-below
+    "[P" 'evil-collection-unimpaired-paste-above
+    "]P" 'evil-collection-unimpaired-paste-below
     (kbd "[ SPC") 'evil-collection-unimpaired-insert-newline-above
     (kbd "] SPC") 'evil-collection-unimpaired-insert-newline-below)
   (evil-collection-define-key 'visual 'evil-collection-unimpaired-mode-map
     "[e" 'evil-collection-unimpaired-move-text-up
-    "]e" 'evil-collection-unimpaired-move-text-down)
+    "]e" 'evil-collection-unimpaired-move-text-down
+    "[n" 'evil-collection-unimpaired-previous-SCM-conflict-marker
+    "]n" 'evil-collection-unimpaired-next-SCM-conflict-marker)
   (evil-collection-define-key 'motion 'evil-collection-unimpaired-mode-map
     "[u" 'evil-collection-unimpaired-url-encode
-    "]u" 'evil-collection-unimpaired-url-decode))
+    "]u" 'evil-collection-unimpaired-url-decode
+    "[6" 'evil-collection-unimpaired-b64-encode
+    "]6" 'evil-collection-unimpaired-b64-decode))
 
 (provide 'evil-collection-unimpaired)
 ;;; evil-collection-unimpaired.el ends here

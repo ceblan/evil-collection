@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, pdf, tools
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -56,7 +56,9 @@
 ;; See https://github.com/emacs-evil/evil-collection/pull/137 for
 ;; details.
 (defun evil-collection-pdf-view-next-line-or-next-page (&optional count)
-  "'evil' wrapper include a count argument to `pdf-view-next-line-or-next-page'"
+  "Wrap `pdf-view-next-line-or-next-page' with `evil'.
+
+Consider COUNT."
   (interactive "P")
   (if count
       (dotimes (_ count nil)
@@ -64,7 +66,9 @@
     (pdf-view-next-line-or-next-page 1)))
 
 (defun evil-collection-pdf-view-previous-line-or-previous-page (&optional count)
-  "'evil' wrapper include a count argument to `pdf-view-previous-line-or-previous-page'"
+  "Wrap `pdf-view-previous-line-or-previous-page' with `evil'.
+
+Consider COUNT."
   (interactive "P")
   (if count
       (dotimes (_ count nil)

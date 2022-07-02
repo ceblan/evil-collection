@@ -3,7 +3,7 @@
 ;; Author: Justin Burkett 
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, ebib, tools
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -47,6 +47,7 @@
     "k" 'ebib-prev-entry
     "n" 'ebib-search-next
     "p" 'ebib-yank-entry
+    "gj" 'ebib-jump-to-entry
     "ZQ" 'ebib-quit
     "ZZ" 'ebib-lower
     (kbd "C-u") 'ebib-index-scroll-down
@@ -68,7 +69,7 @@
     "j" 'ebib-next-field
     "k" 'ebib-prev-field
     "p" 'ebib-yank-field-contents
-    "y" 'ebib-copy-field-contents
+    "y" 'ebib-copy-current-field-contents
     "ZZ" 'ebib-quit-entry-buffer
     "ZQ" 'ebib-quit-entry-buffer))
 

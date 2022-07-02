@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, transmission, tools
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -61,9 +61,9 @@
     "i" 'transmission-info
 
     "a" 'transmission-add
-    ;; "D" 'transmission-delete ; Useless with `transmission-remove'?
-    "r" 'transmission-move
-    "D" 'transmission-remove
+    "D" 'transmission-delete
+    "r" 'transmission-move ; "r" for "[r]ename"
+    "R" 'transmission-remove
     "x" 'transmission-toggle ; EMMS has "x" for pause.
     "t" 'transmission-trackers-add
     "c" 'transmission-verify ; "c" for "[c]heck".
@@ -71,6 +71,7 @@
     "u" 'transmission-set-upload
     "S" 'transmission-set-ratio ; "S" for "[S]eed"
     "P" 'transmission-set-bandwidth-priority
+    "I" 'transmission-label ; "I" for "[I]nput labels"
 
     ;; mark
     "m" 'transmission-toggle-mark
@@ -142,20 +143,13 @@
     "D" 'transmission-set-torrent-download
     "U" 'transmission-set-torrent-upload
     "S" 'transmission-set-torrent-ratio ; "S" for "[S]eed"
+    "I" 'transmission-label ; "I" for "[I]nput labels"
     "P" 'transmission-set-bandwidth-priority
     "r" 'transmission-move)
 
-  (evil-collection-define-key 'operator 'transmission-info-mode-map
-    ;; Like `eww'.
-    "u" '(menu-item
-          ""
-          nil
-          :filter (lambda (&optional _)
-                    (when (memq evil-this-operator
-                                evil-collection-yank-operators)
-                      (setq evil-inhibit-operator t)
-                      #'transmission-copy-magnet))))
-
+  ;; yu, Like `eww'.
+  (evil-collection-define-operator-key 'yank 'transmission-info-mode-map
+    "u" 'transmission-copy-magnet)
 
   (evil-collection-set-readonly-bindings 'transmission-peers-mode-map)
   (evil-set-initial-state 'transmission-peers-mode 'normal)

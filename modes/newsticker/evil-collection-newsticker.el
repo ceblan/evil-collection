@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, newsticker, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -71,8 +71,16 @@
     ;; move
     "[[" 'newsticker-treeview-prev-feed
     "]]" 'newsticker-treeview-next-feed
-    "\C-j" 'newsticker-treeview-next-item
-    "\C-k" 'newsticker-treeview-prev-item
+    ;; The items in Newsticker List buffer has a particular keymap by text
+    ;; property, where CR (C-m) and LF (C-j) are bound to
+    ;; `newsticker-treeview-show-item'. According to the keymap precedence page,
+    ;; the text property based keymap has a higher priority.
+    ;;
+    ;; Eval (info "(elisp)Searching Keymaps") if you have interests.
+    ;;
+    ;; Use M-j/M-k instead.
+    (kbd "M-j") 'newsticker-treeview-next-item
+    (kbd "M-k") 'newsticker-treeview-prev-item
     "gj" 'newsticker-treeview-next-new-or-immortal-item
     "gk" 'newsticker-treeview-prev-new-or-immortal-item
     (kbd "SPC") 'newsticker-treeview-next-page

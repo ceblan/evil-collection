@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, slime, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -160,6 +160,10 @@
     ;; goto
     "gd" 'slime-edit-definition
     "gz" 'slime-switch-to-output-buffer)
+
+  (when evil-collection-want-find-usages-bindings
+    (evil-collection-define-key 'normal 'slime-mode-map
+      "gr" 'slime-who-references))
 
   (evil-collection-define-key 'normal 'slime-popup-buffer-mode-map
     ;; quit

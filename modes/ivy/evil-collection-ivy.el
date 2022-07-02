@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, ivy, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -37,7 +37,7 @@
 ;;;###autoload
 (defun evil-collection-ivy-setup ()
   "Set up `evil' bindings for `ivy-mode'."
-  (evil-collection-define-key nil 'ivy-mode-map
+  (evil-collection-define-key nil 'ivy-minibuffer-map
     (kbd "<escape>") 'minibuffer-keyboard-quit)
   (evil-collection-define-key 'normal 'ivy-occur-mode-map
     [mouse-1] 'ivy-occur-click
@@ -102,7 +102,7 @@
       "k" 'ivy-previous-line)
 
     (evil-collection-define-key 'insert 'ivy-minibuffer-map
-      [backspace] 'ivy-backward-delete-char
+      (kbd "DEL") 'ivy-backward-delete-char
       (kbd "C-r") 'ivy-reverse-i-search
       (kbd "C-n") 'ivy-next-line
       (kbd "C-p") 'ivy-previous-line)))

@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, sly, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -170,6 +170,10 @@ Evil version of `sly-eval-print-last-expression' that accounts for
     "ge" 'sly-describe-symbol
     "gd" 'sly-edit-definition
     "gz" 'sly-mrepl)
+
+  (when evil-collection-want-find-usages-bindings
+    (evil-collection-define-key 'normal 'sly-mode-map
+      "gr" 'sly-who-references))
 
   (evil-collection-define-key 'normal 'sly-popup-buffer-mode-map
     ;; quit

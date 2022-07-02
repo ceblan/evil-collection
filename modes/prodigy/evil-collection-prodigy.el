@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, prodigy, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -65,7 +65,7 @@
     "in" 'prodigy-add-name-filter
     "I" 'prodigy-clear-filters
     "Jm" 'prodigy-jump-magit
-    "Jd" 'prodigy-jump-dired
+    "Jd" 'prodigy-jump-file-manager
 
     "gj" 'prodigy-next-with-status
     "gk" 'prodigy-prev-with-status

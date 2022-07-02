@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, tide, typescript, languages
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -47,7 +47,7 @@
     "gk" 'tide-find-previous-reference
     (kbd "C-j") 'tide-find-next-reference
     (kbd "C-k") 'tide-find-previous-reference
-    (kbd "RET") 'tide-goto-reference
+    (kbd "RET") 'tide-goto-line-reference
     ;; quit
     "q" 'quit-window)
 

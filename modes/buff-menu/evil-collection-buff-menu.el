@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, emacs, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -70,9 +70,7 @@ When called interactively prompt for MARK;  RET remove all marks."
 ;;;###autoload
 (defun evil-collection-buff-menu-setup ()
   "Set up `evil' bindings for `buff-menu'.."
-
   (evil-set-initial-state 'Buffer-menu-mode 'normal)
-  (evil-add-hjkl-bindings Buffer-menu-mode-map 'normal)
 
   (evil-collection-define-key 'normal 'Buffer-menu-mode-map
     "ZQ" 'evil-quit
@@ -96,10 +94,6 @@ When called interactively prompt for MARK;  RET remove all marks."
             'evil-collection-buff-menu-Buffer-menu-unmark-all
           'Buffer-menu-unmark-all)
     "m" 'Buffer-menu-mark
-
-    "f" 'evil-find-char
-    "e" 'evil-forward-word-end
-    "b" 'evil-backward-word-begin
 
     "X" 'Buffer-menu-bury
 

@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, emacs, tools, minimalist, presentation
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -30,14 +30,12 @@
 (require 'evil-collection)
 (require 'org-present nil t)
 
-(defvar org-present-mode-map)
-
-(defconst evil-collection-org-present-maps '(org-present-mode-map))
+(defconst evil-collection-org-present-maps '(org-present-mode-keymap))
 
 ;;;###autoload
 (defun evil-collection-org-present-setup ()
   "Set up `evil' bindings for `org-present'."
-  (evil-collection-define-key 'normal 'org-present-mode-map
+  (evil-collection-define-key 'normal 'org-present-mode-keymap
     "j" 'org-present-next
     "k" 'org-present-prev
     "gj" 'org-present-next

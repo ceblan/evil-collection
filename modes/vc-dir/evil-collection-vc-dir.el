@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <ambrevar@gmail.com>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, vc-dir, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -36,6 +36,7 @@
 (defun evil-collection-vc-dir-setup ()
   "Set up `evil' bindings for `vc-dir'."
   (evil-set-initial-state 'vc-dir-mode 'normal)
+  (evil-collection-set-readonly-bindings 'vc-dir-mode-map)
   (evil-collection-define-key 'normal 'vc-dir-mode-map
     ;; VC commands
     "c" 'vc-next-action

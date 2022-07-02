@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, xref, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -43,6 +43,8 @@
     "gk" 'xref-prev-line
     (kbd "C-j") 'xref-next-line
     (kbd "C-k") 'xref-prev-line
+    (kbd "C-n") 'xref-next-line
+    (kbd "C-p") 'xref-prev-line
     "]]" 'xref-next-line
     "[[" 'xref-prev-line
     "r" 'xref-query-replace-in-results

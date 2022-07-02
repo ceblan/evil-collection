@@ -7,7 +7,7 @@
 ;; Pierre Neidhardt <mail@ambrevar.xyz>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.3"))
 ;; Keywords: evil, emacs, tools
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -49,8 +49,7 @@
     "p" 'tetris-pause-game
     "q" 'quit-window
     "ZQ" 'quit-window
-    "ZZ" 'tetris-end-game
-    (kbd "<escape>") 'quit-window))
+    "ZZ" 'tetris-end-game))
 
 (provide 'evil-collection-tetris)
 ;;; evil-collection-tetris.el ends here
