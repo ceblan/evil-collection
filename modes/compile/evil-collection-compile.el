@@ -52,9 +52,13 @@
       "gj" 'compilation-next-error
       "gk" 'compilation-previous-error
       (kbd "C-j") 'compilation-next-error
+      (kbd "C-n") 'compilation-next-error
       (kbd "C-k") 'compilation-previous-error
+      (kbd "C-p") 'compilation-previous-error
+      (kbd "C-o") 'other-window
       "[[" 'compilation-previous-file
       "]]" 'compilation-next-file
+			"q"  'quit-window
       "gr" 'recompile)))
 
 (provide 'evil-collection-compile)

@@ -42,8 +42,11 @@
   "Set up `evil' bindings for `dired'."
   (evil-collection-define-key 'normal 'dired-mode-map
     "q" 'quit-window
+		[escape] 'quit-window
     "j" 'dired-next-line
+		(kbd "C-n") 'dired-next-line
     "k" 'dired-previous-line
+		(kbd "C-p") 'dired-previous-line
     [mouse-2] 'dired-mouse-find-file-other-window
     [follow-link] 'mouse-face
     ;; Commands to mark or flag certain categories of files
@@ -64,11 +67,14 @@
     "Q" 'dired-do-find-regexp-and-replace
     "R" 'dired-do-rename
     "S" 'dired-do-symlink
-    "T" 'dired-do-touch
+    ;;"T" 'dired-do-touch
+    "gT" 'dired-do-touch
+    "T" 'scroll-down
     "X" 'dired-do-shell-command
     "Z" 'dired-do-compress
     "c" 'dired-do-compress-to
     "!" 'dired-do-shell-command
+		"f" 'swiper
     "&" 'dired-do-async-shell-command
     ;; Comparison commands
     "=" 'dired-diff
@@ -129,7 +135,9 @@
     "K" 'dired-do-kill-lines
     "r" 'dired-do-redisplay
     "m" 'dired-mark
-    "t" 'dired-toggle-marks
+    ;;"t" 'dired-toggle-marks
+    "gt" 'dired-toggle-marks
+    "t" 'scroll-up
     "u" 'dired-unmark                   ; also "*u"
     "W" 'browse-url-of-dired-file
     "x" 'dired-do-flagged-delete
@@ -143,7 +151,8 @@
     "gO" 'dired-find-file-other-window
     "go" 'dired-view-file
     ;; sort
-    "o" 'dired-sort-toggle-or-edit
+    ;;"o" 'dired-sort-toggle-or-edit
+    "o" 'dired-find-file-other-window
     ;; moving
     "gj" 'dired-next-dirline
     "gk" 'dired-prev-dirline
@@ -187,6 +196,7 @@
     (kbd "C-t f") 'image-dired-mark-tagged-files
     (kbd "C-t C-t") 'image-dired-dired-toggle-marked-thumbs
     (kbd "C-t e") 'image-dired-dired-edit-comment-and-tags
+    (kbd "C-o") 'other-window
     ;; encryption and decryption (epa-dired)
     ";d" 'epa-dired-do-decrypt
     ";v" 'epa-dired-do-verify
