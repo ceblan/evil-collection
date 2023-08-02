@@ -282,7 +282,6 @@ with older release versions of `mu4e.'"
   (evil-collection-define-operator-key 'yank 'mu4e-view-mode-map
     "u" 'mu4e-view-save-url))
 
-
 ;;; Update mu4e-main-view
 ;;; To avoid confusion the main-view is updated to show the keys that are in use
 ;;; for evil-mu4e.
