@@ -348,7 +348,7 @@ keybindings."
                                        evil-collection-mu4e-end-region-misc))
 
 ;;; Initialize evil-collection-mu4e
-
+;
 ;;;###autoload
 (defun evil-collection-mu4e-setup ()
   "Initialize evil-mu4e if necessary.
