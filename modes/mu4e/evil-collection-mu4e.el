@@ -240,7 +240,7 @@ with older release versions of `mu4e.'"
      "d" mu4e-view-mark-for-trash
      "=" mu4e-view-mark-for-untrash
      "u" mu4e-view-unmark
-     "U" mu4e-view-unmark-all
+     "U" mu4e-view-mark-unmark-all
      "?" mu4e-view-mark-for-unread
      "!" mu4e-view-mark-for-read
      "%" mu4e-view-mark-pattern
@@ -273,6 +273,8 @@ with older release versions of `mu4e.'"
   (evil-collection-define-key 'visual 'mu4e-compose-mode-map
     "gg" 'mu4e-compose-goto-top
     "G" 'mu4e-compose-goto-bottom)
+  (evil-collection-define-key 'visual 'mu4e-headers-mode-map
+    "!" 'mu4e-headers-mark-for-read)
   (evil-set-command-property 'mu4e-compose-goto-bottom :keep-visual t)
   (evil-set-command-property 'mu4e-compose-goto-top :keep-visual t)
 
