@@ -40,9 +40,13 @@
   (evil-set-initial-state 'flycheck-error-list-mode 'normal)
   (evil-collection-define-key 'normal 'flycheck-error-list-mode-map
     "gj" 'flycheck-error-list-next-error
+    "j" 'flycheck-error-list-next-error
     "gk" 'flycheck-error-list-previous-error
+    "k" 'flycheck-error-list-previous-error
     (kbd "C-j") 'flycheck-error-list-next-error
+    (kbd "C-n") 'flycheck-error-list-next-error
     (kbd "C-k") 'flycheck-error-list-previous-error
+    (kbd "C-p") 'flycheck-error-list-previous-error
     "]]" 'flycheck-error-list-next-error
     "[[" 'flycheck-error-list-previous-error
     "gr" 'flycheck-error-list-check-source

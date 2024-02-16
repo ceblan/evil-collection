@@ -42,12 +42,14 @@
   (dolist (keymap evil-collection-vdiff-maps)
     (evil-collection-define-key 'normal keymap
       "]c" 'vdiff-next-hunk
+      "C-n" 'vdiff-next-hunk
+      "C-p" 'vdiff-previous-hunk
       "[c" 'vdiff-previous-hunk)
 
     ;; define `do' (diff obtain) and `dp' (diff put) bindings
     (evil-collection-define-operator-key 'delete keymap
-      "o" 'vdiff-receive-changes
-      "p" 'vdiff-send-changes)))
+      "R" 'vdiff-receive-changes
+      "S" 'vdiff-send-changes)))
 
 (provide 'evil-collection-vdiff)
 

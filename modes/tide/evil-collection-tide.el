@@ -36,11 +36,14 @@
 
 ;;;###autoload
 (defun evil-collection-tide-setup ()
-  "Set up `evil' bindings for `tide'."
-  (evil-collection-define-key 'normal 'tide-mode-map
-    "gd" 'tide-jump-to-definition
-    (kbd "C-t") 'tide-jump-back
-    "K" 'tide-documentation-at-point)
+	"Set up `evil' bindings for `tide'."
+	(evil-collection-define-key 'normal 'tide-mode-map
+		"gd" 'tide-jump-to-definition
+		(kbd "C-t") 'tide-jump-back
+		"K" 'tide-documentation-at-point)
+
+	(evil-collection-define-key 'visual 'tide-mode-map
+    "=" 'tide-format)
 
   (evil-collection-define-key 'normal 'tide-references-mode-map
     "gj" 'tide-find-next-reference
