@@ -56,6 +56,9 @@
     "gk" 'previous-error-no-select
     (kbd "C-j") 'next-error-no-select
     (kbd "C-k") 'previous-error-no-select
+    (kbd "C-n") 'next-error-no-select
+    (kbd "C-p") 'previous-error-no-select
+
     "r" 'occur-rename-buffer
     "c" 'clone-buffer
     (kbd "C-c C-f") 'next-error-follow-minor-mode)
@@ -73,6 +76,7 @@
     [mouse-2] 'occur-mode-mouse-goto
     (kbd "C-c C-c") 'occur-cease-edit
     (kbd "C-o") 'occur-mode-display-occurrence
+    (kbd "C-n") 'occur-next-error
     (kbd "C-c C-f") 'next-error-follow-minor-mode))
 
 (provide 'evil-collection-replace)
