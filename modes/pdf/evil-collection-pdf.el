@@ -30,9 +30,11 @@
 (require 'evil-collection)
 (require 'pdf-tools nil t)
 (require 'pdf-view nil t)
+(require 'pdf-annot nil t)
 
 (defconst evil-collection-pdf-maps '(pdf-view-mode-map
                                      pdf-outline-buffer-mode-map
+																		 pdf-annot-list-mode-map
                                      pdf-occur-buffer-mode-map))
 
 (declare-function pdf-view-last-page "pdf-view")
@@ -44,10 +46,11 @@
 (defvar pdf-view-mode-map)
 (defvar pdf-outline-buffer-mode-map)
 (defvar pdf-occur-buffer-mode-map)
+(defvar pdf-annot-list-mode-map)
 
-(defvar pdf-view-mode-map)
-(defvar pdf-outline-buffer-mode-map)
-(defvar pdf-occur-buffer-mode-map)
+;; (defvar pdf-view-mode-map)
+;; (defvar pdf-outline-buffer-mode-map)
+;; (defvar pdf-occur-buffer-mode-map)
 
 ;; TODO: The following 2 functions are workarounds for
 ;; 'pdf-view-next-line-or-next-page' and
@@ -97,31 +100,32 @@ Consider COUNT."
 
 ;;;###autoload
 (defun evil-collection-pdf-setup ()
-  "Set up `evil' bindings for `pdf-view'."
-  (evil-collection-inhibit-insert-state 'pdf-view-mode-map)
-  (evil-set-initial-state 'pdf-view-mode 'normal)
-  (evil-collection-define-key 'normal 'pdf-view-mode-map
-    ;; motion
-    (kbd "RET") 'image-next-line
-    "j" 'evil-collection-pdf-view-next-line-or-next-page
-    "k" 'evil-collection-pdf-view-previous-line-or-previous-page
-    (kbd "SPC") 'pdf-view-scroll-up-or-next-page
-    (kbd "S-SPC") 'pdf-view-scroll-down-or-previous-page
-    (kbd "<delete>") 'pdf-view-scroll-down-or-previous-page
-    (kbd "C-f") 'pdf-view-scroll-up-or-next-page
-    (kbd "C-b") 'pdf-view-scroll-down-or-previous-page
-    "]]" 'pdf-view-next-page-command
-    "[[" 'pdf-view-previous-page-command
-    (kbd "C-j") 'pdf-view-next-page-command
-    (kbd "C-k") 'pdf-view-previous-page-command
-    "gj" 'pdf-view-next-page-command
-    "gk" 'pdf-view-previous-page-command
-    (kbd "<next>") 'forward-page
-    (kbd "<prior>") 'backward-page
-    (kbd "<down>") 'evil-collection-pdf-view-next-line-or-next-page
-    (kbd "<up>") 'evil-collection-pdf-view-previous-line-or-previous-page
-    "gg" 'evil-collection-pdf-view-goto-first-page
-    "G" 'evil-collection-pdf-view-goto-page
+	(interactive)
+	"Set up `evil' bindings for `pdf-view'."
+	(evil-collection-inhibit-insert-state 'pdf-view-mode-map)
+	(evil-set-initial-state 'pdf-view-mode 'normal)
+	(evil-collection-define-key 'normal 'pdf-view-mode-map
+		;; motion
+		(kbd "RET") 'image-next-line
+		"j" 'evil-collection-pdf-view-next-line-or-next-page
+		"k" 'evil-collection-pdf-view-previous-line-or-previous-page
+		(kbd "SPC") 'pdf-view-scroll-up-or-next-page
+		(kbd "S-SPC") 'pdf-view-scroll-down-or-previous-page
+		(kbd "<delete>") 'pdf-view-scroll-down-or-previous-page
+		(kbd "C-f") 'pdf-view-scroll-up-or-next-page
+		(kbd "C-b") 'pdf-view-scroll-down-or-previous-page
+		"]]" 'pdf-view-next-page-command
+		"[[" 'pdf-view-previous-page-command
+		(kbd "C-j") 'pdf-view-next-page-command
+		(kbd "C-k") 'pdf-view-previous-page-command
+		"gj" 'pdf-view-next-page-command
+		"gk" 'pdf-view-previous-page-command
+		(kbd "<next>") 'forward-page
+		(kbd "<prior>") 'backward-page
+		(kbd "<down>") 'evil-collection-pdf-view-next-line-or-next-page
+		(kbd "<up>") 'evil-collection-pdf-view-previous-line-or-previous-page
+		"gg" 'evil-collection-pdf-view-goto-first-page
+		"G" 'evil-collection-pdf-view-goto-page
 
     ;; mark
     "'" 'pdf-view-jump-to-register
@@ -221,6 +225,18 @@ Consider COUNT."
     "ZQ" 'quit-window
     "ZZ" 'pdf-outline-quit-and-kill)
 
+	(evil-collection-inhibit-insert-state 'pdf-annot-list-mode-map)
+  (evil-set-initial-state 'pdf-annot-list-mode 'normal)
+  (evil-collection-define-key 'normal 'pdf-annot-list-mode-map
+    ;; open
+    (kbd "SPC") 'pdf-annot-list-display-annotation-from-id
+    ;; (kbd "S-<return>") 'pdf-occur-view-occurrence
+    (kbd "RET") 'tablist-find-entry
+    "j" 'evil-next-line
+    "k" 'evil-previous-line
+    "q" 'quit-window
+		)
+
   (evil-collection-inhibit-insert-state 'pdf-occur-buffer-mode-map)
   (evil-set-initial-state 'pdf-occur-buffer-mode 'normal)
   (evil-collection-define-key 'normal 'pdf-occur-buffer-mode-map
@@ -290,7 +306,9 @@ Consider COUNT."
     ;; quit
     "q" 'tablist-quit
     "ZQ" 'tablist-quit
-    "ZZ" 'tablist-quit))
+    "ZZ" 'tablist-quit)
+
+	)
 
 (provide 'evil-collection-pdf)
 ;;; evil-collection-pdf.el ends here

@@ -48,7 +48,9 @@
     "gO" 'push-button
 
     "g?" 'describe-mode
-    "gr" 'helpful-update))
+    "gr" 'helpful-update
+    "q"  'quit-window
+		))
 
 (provide 'evil-collection-helpful)
 ;;; evil-collection-helpful.el ends here
