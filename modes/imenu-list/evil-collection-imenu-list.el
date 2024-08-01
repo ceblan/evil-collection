@@ -33,6 +33,8 @@
 (defconst evil-collection-imenu-list-maps '(imenu-list-major-mode-map))
 
 ;;;###autoload
+
+(evil-collection-inhibit-insert-state 'imenu-list-major-mode-map)
 (defun evil-collection-imenu-list-setup ()
   "Set up `evil' bindings for `imenu-list'."
   (evil-collection-define-key 'normal 'imenu-list-major-mode-map

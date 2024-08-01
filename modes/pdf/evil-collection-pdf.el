@@ -181,6 +181,8 @@ Consider COUNT."
     "zp" 'pdf-view-printer-minor-mode
 
     "o" 'pdf-outline
+    "a" 'pdf-annot-list-annotations
+    "i" 'imenu-list-smart-toggle
 
     ;; quit
     "q" 'quit-window
@@ -229,9 +231,10 @@ Consider COUNT."
   (evil-set-initial-state 'pdf-annot-list-mode 'normal)
   (evil-collection-define-key 'normal 'pdf-annot-list-mode-map
     ;; open
-    (kbd "SPC") 'pdf-annot-list-display-annotation-from-id
+    (kbd "RET") 'pdf-annot-list-display-annotation-from-id
     ;; (kbd "S-<return>") 'pdf-occur-view-occurrence
-    (kbd "RET") 'tablist-find-entry
+    ;; (kbd "RET") 'tablist-find-entry
+    (kbd "C-<return>") 'tablist-find-entry
     "j" 'evil-next-line
     "k" 'evil-previous-line
     "q" 'quit-window
