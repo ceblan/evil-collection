@@ -50,6 +50,7 @@
     (kbd "RET") 'occur-mode-goto-occurrence
     (kbd "S-<return>") 'occur-mode-goto-occurrence-other-window
     (kbd "M-<return>") 'occur-mode-display-occurrence
+    (kbd "C-<return>") 'occur-mode-display-occurrence
     "go" 'occur-mode-goto-occurrence-other-window
 
     "gj" 'next-error-no-select
@@ -75,7 +76,9 @@
 
     [mouse-2] 'occur-mode-mouse-goto
     (kbd "C-c C-c") 'occur-cease-edit
-    (kbd "C-o") 'occur-mode-display-occurrence
+    ;; (kbd "C-o") 'occur-mode-display-occurrence
+    (kbd "C-o") nil
+    (kbd "C-o") 'other-window
     (kbd "C-n") 'occur-next-error
     (kbd "C-c C-f") 'next-error-follow-minor-mode))
 
