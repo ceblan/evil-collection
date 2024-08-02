@@ -1,4 +1,4 @@
-;;; evil-collection-magit.el --- Evil-based key bindings for magit
+;;; evil-collection-magit.el --- Evil-based key bindings for magit  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2015-2016, 2021 Justin Burkett
 
@@ -50,7 +50,6 @@
 (defvar magit-process-mode-map)
 (defvar magit-reflog-mode-map)
 (defvar magit-refs-mode-map)
-(defvar magit-repolist-mode-map)
 (defvar magit-status-mode-map)
 (defvar magit-submodule-list-mode-map)
 
@@ -62,7 +61,6 @@
     magit-blame-read-only-mode-map
     magit-blob-mode-map
     magit-submodule-list-mode-map ; -> parent: `magit-repolist-mode-map'
-    magit-repolist-mode-map
     magit-mode-map))
 
 (defcustom evil-collection-magit-use-y-for-yank t
@@ -200,7 +198,8 @@ Move `magit-diff-default-context' to \"~\"."
     (evil-set-initial-state mode evil-default-state)))
 
 (defun evil-collection-magit-revert-initial-states ()
-  "Revert the initial state for modes to their values before evil-collection-magit was loaded."
+  "Revert the initial state for modes to their values before
+evil-collection-magit was loaded."
   (dolist (mode (append evil-collection-magit-emacs-to-evil-collection-magit-state-modes
                         evil-collection-magit-emacs-to-default-state-modes))
     (evil-set-initial-state mode 'emacs))
@@ -472,15 +471,6 @@ denotes the original magit key for this command.")
 ;; Need to refresh evil keymaps when blame mode is entered.
 (add-hook 'magit-blame-mode-hook 'evil-normalize-keymaps)
 
-(evil-set-initial-state 'magit-repolist-mode 'normal)
-(evil-collection-define-key 'normal 'magit-repolist-mode-map
-  "m" 'magit-repolist-mark
-  "u" 'magit-repolist-unmark
-  "f" 'magit-repolist-fetch
-  (kbd "RET") 'magit-repolist-status
-  (kbd "gr")  'magit-list-repositories)
-(add-hook 'magit-repolist-mode-hook 'evil-normalize-keymaps)
-
 (evil-set-initial-state 'magit-submodule-list-mode 'normal)
 (evil-collection-define-key 'normal 'magit-submodule-list-mode-map
   (kbd "RET") 'magit-repolist-status
@@ -632,9 +622,9 @@ evil-collection-magit affects.")
 ;;;###autoload
 (defun evil-collection-magit-init ()
   "This function completes the setup of evil-collection-magit. It is called
-automatically when evil-collection-magit-setup is called.. The only reason to use
-this function is if you've called `evil-collection-magit-revert' and wish to
-go back to evil-collection-magit behavior."
+automatically when evil-collection-magit-setup is called.. The only reason to
+use this function is if you've called `evil-collection-magit-revert' and wish
+to go back to evil-collection-magit behavior."
   (interactive)
   (evil-collection-magit-adjust-section-bindings)
   (evil-collection-magit-adjust-popups)

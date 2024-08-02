@@ -32,7 +32,7 @@
 
 (defvar pass-mode-map)
 
-(declare-function "pass--display-keybinding" "pass")
+(declare-function pass--display-keybinding "pass")
 
 (defconst evil-collection-pass-maps '(pass-mode-map))
 
@@ -93,6 +93,7 @@ keybindings listed in `evil-collection-pass-command-to-label'."
     "I" 'pass-insert-generated
     "Y" 'pass-copy
     "r" 'pass-rename
+    "R" 'pass-rename
     "o" 'pass-otp-options
     (kbd "RET") 'pass-view
     "q" 'pass-quit))

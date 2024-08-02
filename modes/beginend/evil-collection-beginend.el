@@ -52,6 +52,7 @@
                                              epa-key-list-mode
                                              magit-status-mode
                                              elfeed-search-mode
+                                             elfeed-show-mode
                                              magit-revision-mode
                                              notmuch-search-mode
                                              recentf-dialog-mode)))
@@ -69,7 +70,8 @@ newly defined motion."
         (beginend-beginning-fn-name (intern (format "beginend-%s-goto-beginning" ec-mode-name)))
         (beginend-map-name (intern (format "beginend-%s-map" ec-mode-name))))
     `(progn
-       (declare-function ,beginend-beginning-fn-name "beginend")
+       (declare-function ,motion-name "evil-collection")
+       (declare-function ,beginend-beginning-fn-name "ext:beginend")
        (evil-define-motion ,motion-name (count)
          :jump t
          :type line
@@ -91,7 +93,8 @@ newly defined motion."
         (beginend-end-fn-name (intern (format "beginend-%s-goto-end" ec-mode-name)))
         (beginend-map-name (intern (format "beginend-%s-map" ec-mode-name))))
     `(progn
-       (declare-function ,beginend-end-fn-name "beginend")
+       (declare-function ,motion-name "evil-collection")
+       (declare-function ,beginend-end-fn-name "ext:beginend")
        (evil-define-motion ,motion-name (count)
          :jump t
          :type line

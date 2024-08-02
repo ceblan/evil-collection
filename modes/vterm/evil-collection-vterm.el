@@ -40,11 +40,17 @@
 
 (defvar vterm--process)
 
+(defcustom evil-collection-vterm-move-cursor-back nil
+  "Whether the cursor is moved backwards when exiting insert state."
+  :type 'boolean
+  :group 'vterm)
+
 (defun evil-collection-vterm-escape-stay ()
   "Go back to normal state but don't move cursor backwards.
 Moving cursor backwards is the default vim behavior but
 it is not appropriate in some cases like terminals."
-  (setq-local evil-move-cursor-back nil))
+  (setq-local evil-move-cursor-back
+              evil-collection-vterm-move-cursor-back))
 
 (defvar-local evil-collection-vterm-send-escape-to-vterm-p nil
   "Track whether or not we send ESC to `vterm' or `emacs'.")
@@ -69,6 +75,7 @@ also uses `evil-mode'."
 
 (declare-function vterm-cursor-in-command-buffer-p "vterm")
 (declare-function vterm-beginning-of-line "vterm")
+(declare-function vterm-insert "vterm")
 
 (evil-define-motion evil-collection-vterm-first-non-blank ()
   "Move the cursor to the first non-blank character
@@ -93,14 +100,14 @@ after the prompt."
 (defun evil-collection-vterm-append ()
   "Append character after cursor."
   (interactive)
-  (vterm-goto-char (point))
-  (call-interactively #'evil-append))
+  (vterm-goto-char (1+ (point)))
+  (call-interactively #'evil-insert))
 
 (defun evil-collection-vterm-append-line ()
   "Append character at end-of-line."
   (interactive)
   (vterm-goto-char (vterm--get-end-of-line))
-  (call-interactively #'evil-append))
+  (call-interactively #'evil-insert))
 
 (declare-function vterm-yank "vterm")
 
@@ -150,7 +157,7 @@ Save in REGISTER or in the kill-ring with YANK-HANDLER."
 
 (evil-define-operator evil-collection-vterm-delete-char (beg end type register)
   "Delete current character."
-  :motion evil-delete-char
+  :motion evil-forward-char
   (interactive "<R><x>")
   (evil-collection-vterm-delete beg end type register))
 
@@ -193,6 +200,14 @@ Save in REGISTER or in the kill-ring with YANK-HANDLER."
      (t
       (evil-collection-vterm-delete beg line-end type register yank-handler)))))
 
+(evil-define-operator evil-collection-vterm-replace (beg end type register yank-handler)
+  :motion evil-forward-char
+  (interactive "<R>")
+  (let ((replacement (make-string (- end beg) (read-char))))
+    (evil-collection-vterm-delete beg end type register yank-handler)
+    (vterm-insert replacement)
+    (vterm-goto-char (1- end))))
+
 (evil-define-operator evil-collection-vterm-change (beg end type register yank-handler)
   (evil-collection-vterm-delete beg end type register yank-handler)
   (evil-collection-vterm-insert))
@@ -212,6 +227,16 @@ Save in REGISTER or in the kill-ring with YANK-HANDLER."
   :type line
   (interactive "<r><x>")
   (evil-collection-vterm-change beg end 'line register yank-handler))
+
+(evil-define-motion evil-collection-vterm-next-line (count)
+  "Move the cursor COUNT lines down.
+But don't allow the cursor to move bellow the last prompt line."
+  :type line
+  ;; This successfully prevents the `j' button from moving to an empty line
+  ;; bellow the last prompt. However, it still can be bugged for example by
+  ;; going to the one line above the last prompt and doing `10j'.
+  (when (> (count-words (point) (point-max)) 0)
+    (evil-next-line count)))
 
 ;;;###autoload
 (defun evil-collection-vterm-setup ()
@@ -264,10 +289,13 @@ Save in REGISTER or in the kill-ring with YANK-HANDLER."
     "i" 'evil-collection-vterm-insert
     "I" 'evil-collection-vterm-insert-line
     "u" 'vterm-undo
+    "r" 'evil-collection-vterm-replace
     "c" 'evil-collection-vterm-change
     "C" 'evil-collection-vterm-change-line
     "s" 'evil-collection-vterm-substitute
-    "S" 'evil-collection-vterm-substitute-line)
+    "S" 'evil-collection-vterm-substitute-line
+    "j" 'evil-collection-vterm-next-line
+    "G" 'vterm-reset-cursor-point)
 
   (evil-collection-define-key 'visual 'vterm-mode-map
     "d" 'evil-collection-vterm-delete

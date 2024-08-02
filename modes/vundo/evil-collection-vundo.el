@@ -63,7 +63,11 @@
     (kbd "M-j") 'vundo-next
     (kbd "M-k") 'vundo-previous
     "i" 'vundo--inspect
-    "d" 'vundo--debug
+    "D" 'vundo--debug
+    "d" 'vundo-diff
+    "m" 'vundo-diff-mark
+    "u" 'vundo-diff-unmark
+    "w" 'vundo-next-root
     "q" 'vundo-quit
     "ZZ" 'vundo-quit
     "ZQ" 'vundo-quit))

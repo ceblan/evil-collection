@@ -1,6 +1,6 @@
 ;;; evil-collection-cider.el --- Evil bindings for Cider -*- lexical-binding: t -*-
 
-;; Copyright (C) 2017 James Nguyen
+;; Copyright (C) 2017, 2024 James Nguyen
 
 ;; Author: James Nguyen <james@jojojames.com>
 ;; Maintainer: James Nguyen <james@jojojames.com>
@@ -30,6 +30,8 @@
 (require 'cl-lib)
 (require 'cider nil t)
 (require 'evil-collection)
+
+(defvar cider-use-xref)
 
 (declare-function cider-debug-mode-send-reply "cider-debug")
 
@@ -70,14 +72,20 @@ ex. \(cider-debug-mode-send-reply \":next\"\)"
                (interactive)
                (cider-debug-mode-send-reply ,(format ":%s" command))))))))
 
-(evil-collection-cider-make-debug-command "next"
-                                          "continue"
+(evil-collection-cider-make-debug-command "continue"
+                                          "continue-all"
+                                          "next"
+                                          "in"
                                           "out"
-                                          "quit"
+                                          "force-out"
                                           "eval"
-                                          "inject"
                                           "inspect"
-                                          "locals")
+                                          "inspect-prompt"
+                                          "locals"
+                                          "inject"
+                                          "stacktrace"
+                                          "trace"
+                                          "quit")
 
 ;;;###autoload
 (defun evil-collection-cider-setup ()
@@ -98,33 +106,45 @@ ex. \(cider-debug-mode-send-reply \":next\"\)"
 
     (evil-collection-define-key 'normal 'cider--debug-mode-map
       "b" 'cider-debug-defun-at-point
-      "n" 'evil-collection-cider-debug-next
       "c" 'evil-collection-cider-debug-continue
+      "C" 'evil-collection-cider-debug-continue-all
+      "n" 'evil-collection-cider-debug-next
+      "I" 'evil-collection-cider-debug-in
       "o" 'evil-collection-cider-debug-out
-      "q" 'evil-collection-cider-debug-quit
+      "O" 'evil-collection-cider-debug-force-out
+      "H" 'cider-debug-move-here
       "e" 'evil-collection-cider-debug-eval
-      "J" 'evil-collection-cider-debug-inject
-      "I" 'evil-collection-cider-debug-inspect
+      "p" 'evil-collection-cider-debug-inspect
+      "P" 'evil-collection-cider-debug-inspect-prompt
       "L" 'evil-collection-cider-debug-locals
-      "H" 'cider-debug-move-here))
+      "J" 'evil-collection-cider-debug-inject
+      "s" 'evil-collection-cider-debug-stacktrace
+      "t" 'evil-collection-cider-debug-trace
+      "q" 'evil-collection-cider-debug-quit))
 
   (evil-collection-define-key '(normal visual) 'cider-mode-map
-    "gd" 'cider-find-var
-    (kbd "C-t") 'cider-pop-back
     "gz" 'cider-switch-to-repl-buffer
     "gf" 'cider-find-resource
     "K" 'cider-doc)
+
+  (unless cider-use-xref
+    (evil-collection-define-key '(normal visual) 'cider-mode-map
+      "gd" 'cider-find-var
+      (kbd "C-t") 'cider-pop-back))
 
   (evil-collection-define-key '(normal visual) 'cider-repl-mode-map
     ;; FIXME: This seems to get overwritten by `cider-switch-to-repl-buffer'.
     "gz" 'cider-switch-to-last-clojure-buffer
     (kbd "RET") 'cider-repl-return
 
-    "gd" 'cider-find-var
-    (kbd "C-t") 'cider-pop-back
     "gr" 'cider-refresh
     "gf" 'cider-find-resource
     "K" 'cider-doc)
+
+  (unless cider-use-xref
+    (evil-collection-define-key '(normal visual) 'cider-repl-mode-map
+      "gd" 'cider-find-var
+      (kbd "C-t") 'cider-pop-back))
 
   (evil-collection-define-key '(normal visual) 'cider-repl-history-mode-map
     (kbd "C-k") 'cider-repl-history-previous
@@ -168,7 +188,7 @@ ex. \(cider-debug-mode-send-reply \":next\"\)"
     "r" 'cider-macroexpand-again
     "K" 'cider-doc ; Evil has `evil-lookup'.
     "J" 'cider-javadoc
-    "." 'cider-find-var
+    "." (if cider-use-xref 'xref-find-definitions 'cider-find-var)
     "m" 'cider-macroexpand-1-inplace
     "a" 'cider-macroexpand-all-inplace
     "u" 'cider-macroexpand-undo

@@ -1,6 +1,6 @@
 ;;; evil-collection-pdf.el --- Evil bindings for pdf-tools  -*- lexical-binding: t -*-
 
-;; Copyright (C) 2017 Pierre Neidhardt
+;; Copyright (C) 2017, 2024 Pierre Neidhardt
 
 ;; Author: Pierre Neidhardt <mail@ambrevar.xyz>
 ;; Maintainer: James Nguyen <james@jojojames.com>
@@ -31,8 +31,10 @@
 (require 'pdf-tools nil t)
 (require 'pdf-view nil t)
 (require 'pdf-annot nil t)
+(require 'pdf-history nil t)
 
 (defconst evil-collection-pdf-maps '(pdf-view-mode-map
+                                     pdf-history-minor-mode-map
                                      pdf-outline-buffer-mode-map
 																		 pdf-annot-list-mode-map
                                      pdf-occur-buffer-mode-map))
@@ -42,8 +44,14 @@
 (declare-function pdf-view-goto-page "pdf-view")
 (declare-function pdf-view-previous-line-or-previous-page "pdf-view")
 (declare-function pdf-view-next-line-or-next-page "pdf-view")
+(declare-function pdf-view-assert-active-region "pdf-view")
+(declare-function pdf-view-active-region-text "pdf-view")
+(declare-function pdf-view-deactivate-region "pdf-view")
+(declare-function pdf-history-forward "pdf-history")
+(declare-function pdf-history-backward "pdf-history")
 
 (defvar pdf-view-mode-map)
+(defvar pdf-history-minor-mode-map)
 (defvar pdf-outline-buffer-mode-map)
 (defvar pdf-occur-buffer-mode-map)
 (defvar pdf-annot-list-mode-map)
@@ -97,6 +105,43 @@ Consider COUNT."
       (pdf-view-first-page)
       (image-bob)
       (image-set-window-hscroll hscroll))))
+
+(defun evil-collection-pdf-jump-forward (&optional count)
+  "Wrap `pdf-history-forward' with `evil'.
+
+Consider COUNT."
+  (interactive "P")
+  (pdf-history-forward (or count 1)))
+
+(defun evil-collection-pdf-jump-backward (&optional count)
+  "Wrap `pdf-history-backward' with `evil'.
+
+Consider COUNT."
+  (interactive "P")
+  (pdf-history-backward (or count 1)))
+
+(defun evil-collection-pdf-yank ()
+  "Save the text of the active region into the currently selected register."
+  (interactive)
+  (pdf-view-assert-active-region)
+  (let ((txt (pdf-view-active-region-text))
+        (reg evil-this-register))
+    (pdf-view-deactivate-region)
+    (evil-set-register
+     (or reg ?\")
+     (mapconcat #'identity txt nil))))
+
+(defun evil-collection-pdf-disable-visual-mode ()
+  "Don't enter visual-mode when the mark is activated.
+Rationale: pdf-view allows using the region to select text within the pdf,
+but evil-mode does not know how to do this. It selects entire pdf images
+instead, which is useless and counterintuitive."
+  (add-hook 'evil-local-mode-hook
+            (lambda () (remove-hook
+                        'activate-mark-hook
+                        'evil-visual-activate-hook
+                        t))
+            nil t))
 
 ;;;###autoload
 (defun evil-collection-pdf-setup ()
@@ -186,20 +231,29 @@ Consider COUNT."
 
     ;; quit
     "q" 'quit-window
-    "Q" 'kill-this-buffer
-    "ZQ" 'kill-this-buffer
+    "Q" 'kill-current-buffer
+    "ZQ" 'kill-current-buffer
     "ZZ" 'quit-window)
 
 
   (when evil-want-C-d-scroll
     (evil-collection-define-key 'normal 'pdf-view-mode-map
       (kbd "C-d") 'pdf-view-scroll-up-or-next-page))
-  (when evil-want-C-d-scroll
+  (when evil-want-C-u-scroll
     (evil-collection-define-key 'normal 'pdf-view-mode-map
       (kbd "C-u") 'pdf-view-scroll-down-or-previous-page))
 
-  (evil-collection-define-key 'visual 'pdf-view-mode-map
-    "y" 'pdf-view-kill-ring-save)
+  (add-hook 'pdf-view-mode-hook #'evil-collection-pdf-disable-visual-mode)
+
+  (evil-collection-define-key 'normal 'pdf-view-mode-map
+    "y" 'evil-collection-pdf-yank)
+
+  (evil-collection-inhibit-insert-state 'pdf-history-minor-mode-map)
+  (evil-set-initial-state 'pdf-history-minor-mode 'normal)
+  (evil-collection-define-key 'normal 'pdf-history-minor-mode-map
+    ;; history forward / backward
+    (kbd "C-i") 'evil-collection-pdf-jump-forward
+    (kbd "C-o") 'evil-collection-pdf-jump-backward)
 
   (evil-collection-inhibit-insert-state 'pdf-outline-buffer-mode-map)
   (evil-set-initial-state 'pdf-outline-buffer-mode 'normal)
