@@ -53,6 +53,9 @@
 
     "t" 'nov-goto-toc
     "i" 'nov-goto-toc
+
+    "o" 'occur
+
     (kbd "RET") 'nov-browse-url
     (kbd "<follow-link>") 'mouse-face
     (kbd "<mouse-2>") 'nov-browse-url
