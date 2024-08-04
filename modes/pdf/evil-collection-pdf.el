@@ -252,8 +252,9 @@ instead, which is useless and counterintuitive."
   (evil-set-initial-state 'pdf-history-minor-mode 'normal)
   (evil-collection-define-key 'normal 'pdf-history-minor-mode-map
     ;; history forward / backward
-    (kbd "C-i") 'evil-collection-pdf-jump-forward
-    (kbd "C-o") 'evil-collection-pdf-jump-backward)
+    (kbd "C-n") 'evil-collection-pdf-jump-forward
+    (kbd "C-p") 'evil-collection-pdf-jump-backward
+    (kbd "C-o") 'other-window)
 
   (evil-collection-inhibit-insert-state 'pdf-outline-buffer-mode-map)
   (evil-set-initial-state 'pdf-outline-buffer-mode 'normal)
