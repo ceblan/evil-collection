@@ -35,6 +35,31 @@
                                    eww-buffers-mode-map
                                    eww-bookmark-mode-map))
 
+
+(defun ceb-eww-toggle-images ()
+  "Toggle whether images are loaded and reload the current page fro cache."
+  (interactive)
+  (setq-local shr-inhibit-images (not shr-inhibit-images))
+  (eww-reload t)
+	(setq-local org-indent-mode-turns-on-hiding-stars t)
+  (message "Images are now %s"
+           (if shr-inhibit-images "off" "on")))
+
+(defun ceb-eww-toggle-fonts ()
+  "Toggle whether images are loaded and reload the current page fro cache."
+  (interactive)
+  (setq-local shr-use-fonts (not shr-use-fonts))
+  (eww-reload t)
+	(setq-local org-indent-mode-turns-on-hiding-stars t)
+  (message "Fonts are now %s"
+           (if shr-use-fonts "off" "on")))
+
+
+;; minimal rendering by default
+(setq-default shr-inhibit-images t)   ; toggle with `N`
+(setq-default shr-use-fonts t)      ; toggle with `F`
+(setq-default org-indent-mode-turns-on-hiding-stars t)
+
 ;;;###autoload
 (defun evil-collection-eww-setup ()
   "Set up `evil' bindings for `eww'."
@@ -47,6 +72,8 @@
     (kbd "DEL") 'eww-back-url
     "H" 'eww-back-url
     "L" 'eww-forward-url
+		"N" 'ceb-eww-toggle-images
+		"F" 'ceb-eww-toggle-fonts
 
     "gf" 'eww-view-source               ; Like qutebrowser.
 
@@ -70,10 +97,25 @@
     "go" 'eww-browse-with-external-browser
     "o" 'eww                            ; Like qutebrowser.
 
-    (kbd "SPC") 'scroll-up-command
-    (kbd "S-SPC") 'scroll-down-command
-    (kbd "<tab>") 'shr-next-link
-    (kbd "<backtab>") 'shr-previous-link
+    ;; (kbd "SPC") 'scroll-up-command
+    ;; (kbd "S-SPC") 'scroll-down-command
+    ;;(kbd "<tab>") 'shr-next-link
+    (kbd "C-n") 'eww-next-link
+    ;; (kbd "<backtab>") 'shr-previous-link
+		(kbd "C-p") 'eww-previous-link
+
+		(kbd "<tab>") 'shrface-outline-cycle
+		(kbd "S-<tab>") 'shrface-outline-cycle-buffer
+		;; (kbd "C-t") 'shrface-toggle-bullets
+		(kbd "C-j") 'shrface-next-headline
+		(kbd "C-k") 'shrface-previous-headline
+		;; (kbd "M-l") 'shrface-links-counsel ; or 'shrfac
+		;; (kbd "M-h") 'shrface-headline-counsel ; or 'sh
+		(kbd "M-l") 'shrface-links-consult ; or 'shrfac
+		(kbd "M-h") 'shrface-headline-consult ; or 'sh
+
+
+
 
     ;; bookmarks
     "gb" 'eww-list-bookmarks

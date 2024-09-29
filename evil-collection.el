@@ -277,6 +277,7 @@ See `evil-collection-init' and `evil-collection--modes-with-delayed-setup'."
     (package-menu package)
     pass
     (pdf pdf-view)
+		(gptel gptel-context)
     popup
     proced
     (process-menu simple)

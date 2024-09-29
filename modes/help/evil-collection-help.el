@@ -39,8 +39,8 @@
   (evil-collection-set-readonly-bindings 'help-mode-map)
   (evil-collection-define-key 'normal 'help-mode-map
     ;; motion
-    (kbd "SPC") 'scroll-up-command
-    (kbd "S-SPC") 'scroll-down-command
+    ;; (kbd "SPC") 'scroll-up-command
+    ;; (kbd "S-SPC") 'scroll-down-command
     (kbd "C-f") 'scroll-up-command
     (kbd "C-b") 'scroll-down-command
     (kbd "<tab>") 'forward-button
@@ -50,7 +50,8 @@
     "g]" 'forward-button
     "g[" 'backward-button
 
-    (kbd "C-o") 'help-go-back
+    (kbd "C-p") 'help-go-back
+    (kbd "C-o") 'other-window
     (kbd "C-i") 'help-go-forward
 
     ;; TODO: Enable more help-go-* bindings?
