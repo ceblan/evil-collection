@@ -118,7 +118,9 @@
 
 
     ;; bookmarks
-    "gb" 'eww-list-bookmarks
+    ;; "gb" 'eww-list-bookmarks
+    "gb" 'helm-filtered-bookmarks
+    "gB" 'bookmark-set
 
     "gh" 'eww-list-histories
     "gt" 'eww-list-buffers              ; Like dwb, qutebrowser.
