@@ -119,7 +119,7 @@
 
     ;; bookmarks
     ;; "gb" 'eww-list-bookmarks
-    "gb" 'helm-filtered-bookmarks
+    "gb" 'consult-bookmark
     "gB" 'bookmark-set
 
     "gh" 'eww-list-histories
