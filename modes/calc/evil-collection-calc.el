@@ -57,7 +57,7 @@
     (kbd "<tab>") 'calc-roll-down
     (kbd "S-<return>") 'calc-over
     (kbd "RET") 'calc-enter
-    (kbd "SPC") 'calc-enter
+    ;; (kbd "SPC") 'calc-enter
 
     (kbd "C-x C-t") 'calc-transpose-lines
     (kbd "C-M-d") 'calc-pop-above
@@ -79,6 +79,7 @@
     "pP" 'calc-copy-to-buffer           ; was "y"
 
     (kbd "C-p") 'calc-precision         ; was "p"
+    (kbd "C-c t") 'calc-transient         ; was "p"
 
     "?" 'calc-help
     ;; "h" 'calc-help-prefix ; TODO: Rebind?
