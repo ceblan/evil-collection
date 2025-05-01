@@ -122,6 +122,7 @@ Note that there is no gnus-common-mode-map")
     "z/"        'gnus-summary-limit-map
     "zt"        'gnus-summary-toggle-header
     "x"         'gnus-summary-limit-to-unread
+    "gX"        'gnus-summary-browse-url
 
     ;; Finding the parent
     "^"         'gnus-summary-refer-parent-article
@@ -320,6 +321,8 @@ Note that there is no gnus-common-mode-map")
     "]]"        'gnus-group-next-unread-group
     "gk"        'gnus-group-prev-unread-group
     "gj"        'gnus-group-next-unread-group
+    (kbd "C-j") 'gnus-group-next-group
+    (kbd "C-k") 'gnus-group-prev-group
 
     ;; Composing, like mu4e
     "C"         'gnus-group-mail

@@ -492,8 +492,8 @@ denotes the original magit key for this command.")
          ("x"    git-rebase-exec           "exec = run command (the rest of the line) using shell")
          ("d"    git-rebase-kill-line      "drop = remove commit" "k")
          ("u"    git-rebase-undo           "undo last change")
-         (nil    with-editor-finish        "tell Git to make it happen")
-         (nil    with-editor-cancel        "tell Git that you changed your mind, i.e. abort")
+         ("ZZ"   with-editor-finish        "tell Git to make it happen")
+         ("ZQ"   with-editor-cancel        "tell Git that you changed your mind, i.e. abort")
          ("k"    evil-previous-line        "move point to previous line" "p")
          ("j"    evil-next-line            "move point to next line" "n")
          ("M-k"  git-rebase-move-line-up   "move the commit at point up" "\M-p")
@@ -580,7 +580,7 @@ evil-collection-magit affects.")
      '((magit-dispatch "Z" "%" magit-worktree)
        (magit-dispatch "z" "Z" magit-stash)))
    (when evil-collection-magit-want-horizontal-movement
-     '((magit-dispatch "L" "\C-l" magit-log-refresh)
+     '((magit-dispatch "L" "C-l" magit-log-refresh)
        (magit-dispatch "l" "L" magit-log)))
    '((magit-branch "x" "X" magit-branch-reset)
      (magit-branch "k" "x" magit-branch-delete)
@@ -651,6 +651,9 @@ using `evil-collection-magit-toggle-text-mode'"
 (evil-collection-define-key evil-collection-magit-state 'magit-mode-map
   "\C-t" 'evil-collection-magit-toggle-text-mode
   "\\"   'evil-collection-magit-toggle-text-mode)
+(evil-collection-define-key evil-collection-magit-state 'git-rebase-mode-map
+  "\C-t" 'evil-collection-magit-toggle-text-mode
+  "\\"   'evil-collection-magit-toggle-text-mode)
 
 (defvar evil-collection-magit-last-mode nil
   "Used to store last magit mode before entering text mode using
@@ -659,10 +662,11 @@ using `evil-collection-magit-toggle-text-mode'"
 (defun evil-collection-magit-toggle-text-mode ()
   "Switch to `text-mode' and back from magit buffers."
   (interactive)
-  (cond ((derived-mode-p 'magit-mode)
+  (cond ((derived-mode-p 'magit-mode 'git-rebase-mode)
          (setq evil-collection-magit-last-mode major-mode)
          (message "Switching to text-mode")
          (text-mode)
+         (read-only-mode -1)
          (evil-collection-magit-toggle-text-minor-mode 1)
          (evil-normalize-keymaps))
         ((and (eq major-mode 'text-mode)

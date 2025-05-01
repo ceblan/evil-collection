@@ -1,30 +1,29 @@
-;;; evil-collection-pdf.el --- Evil bindings for pdf-tools  -*- lexical-binding: t -*-
+;;; evil-collection-gptel.el --- Bindings for gptel -*- lexical-binding: t -*-
 
-;; Copyright (C) 2017, 2024 Pierre Neidhardt
+;; Copyright (C) 2024 James Nguyen
 
-;; Author: Pierre Neidhardt <mail@ambrevar.xyz>
-;; Maintainer: James Nguyen <james@jojojames.com>
-;; Pierre Neidhardt <mail@ambrevar.xyz>
+;; Author: James Nguyen <james@jojojames.com>
+;; Maintainer: James Nguyen <james@jojojames.com>, Zhiwei Chen <condy0919@gmail.com>
 ;; URL: https://github.com/emacs-evil/evil-collection
 ;; Version: 0.0.1
 ;; Package-Requires: ((emacs "26.3"))
-;; Keywords: evil, pdf, tools
+;; Keywords: emacs
 
-;; This file is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published
-;; by the Free Software Foundation; either version 3, or (at your
-;; option) any later version.
-;;
-;; This file is distributed in the hope that it will be useful,
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
-;;
-;; For a full copy of the GNU General Public License
-;; see <http://www.gnu.org/licenses/>.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-;; Evil bindings for pdf-tools.
+;;; Bindings for gptel.
 
 ;;; Code:
 (require 'evil-collection)
@@ -32,21 +31,8 @@
 (require 'gptel-context nil t)
 
 (defconst evil-collection-gptel-maps '(gptel-mode-map
-                                     ;; pdf-history-minor-mode-map
-                                     ;; pdf-outline-buffer-mode-map
-																		 ;; pdf-annot-list-mode-map
                                      gptel-context-buffer-mode-map))
 
-;; (declare-function pdf-view-last-page "pdf-view")
-;; (declare-function pdf-view-first-page "pdf-view")
-;; (declare-function pdf-view-goto-page "pdf-view")
-;; (declare-function pdf-view-previous-line-or-previous-page "pdf-view")
-;; (declare-function pdf-view-next-line-or-next-page "pdf-view")
-;; (declare-function pdf-view-assert-active-region "pdf-view")
-;; (declare-function pdf-view-active-region-text "pdf-view")
-;; (declare-function pdf-view-deactivate-region "pdf-view")
-;; (declare-function pdf-history-forward "pdf-history")
-;; (declare-function pdf-history-backward "pdf-history")
 
 ;; (defvar gptel-mode-map)
 (defvar gptel-context-buffer-mode-map)
@@ -55,18 +41,12 @@
 (defun evil-collection-gptel-setup ()
 	(interactive)
 	"Set up `evil' bindings for `gptel'."
-	;; (evil-collection-inhibit-insert-state 'gptel-context-buffer-mode-map)
 	(evil-set-initial-state 'gptel-context 'normal)
 	(evil-collection-define-key 'normal 'gptel-context-buffer-mode-map
 		;; motion
 		"d" 'gptel-context-flag-deletion
 		"n" 'gptel-context-next
 		"p" 'gptel-context-previous
-		;; (kbd "SPC") 'pdf-view-scroll-up-or-next-page
-		;; (kbd "S-SPC") 'pdf-view-scroll-down-or-previous-page
-		;; (kbd "<delete>") 'pdf-view-scroll-down-or-previous-page
-		;; (kbd "C-f") 'pdf-view-scroll-up-or-next-page
-		;; (kbd "C-b") 'pdf-view-scroll-down-or-previous-page
 		"q" 'quit-window
 		"ZQ" 'quit-window
 		"ZZ" 'pdf-outline-quit-and-kill)
@@ -76,4 +56,54 @@
 
 
 (provide 'evil-collection-gptel)
-;;; evil-collection-pdf.el ends here
+
+
+;;; De aquí para abajo es el nuevo gptel. Me gusta ás el mío
+;; (defconst evil-collection-gptel-maps
+;;   '(gptel-mode-map gptel-context-buffer-mode-map))
+
+;; (defcustom evil-collection-gptel-want-ret-to-send t
+;;   "When non nil, RET sends query to LLM."
+;;   :group 'evil-collection
+;;   :type 'boolean)
+
+;; (defcustom evil-collection-gptel-want-shift-ret-to-send t
+;;   "When non nil, S-RET sends query to LLM."
+;;   :group 'evil-collection
+;;   :type 'boolean)
+
+;; (defcustom evil-collection-gptel-want-shift-ret-menu t
+;;   "When non nil, S-RET opens calls `gptel-menu'. This takes priority over
+;;  `evil-collection-gptel-want-shift-ret-to-send'."
+;;   :group 'evil-collection
+;;   :type 'boolean)
+
+;; ;;;###autoload
+;; (defun evil-collection-gptel-setup ()
+;;   "Set up `evil' bindings for gptel."
+;;   (when evil-collection-gptel-want-ret-to-send
+;;     (evil-collection-define-key '(normal visual) 'gptel-mode-map
+;;       (kbd "RET") 'gptel-send))
+;;   (if evil-collection-gptel-want-shift-ret-menu
+;;       (evil-collection-define-key '(normal visual) 'gptel-mode-map
+;;         (kbd "S-RET") 'gptel-menu
+;;         (kbd "<S-return>") 'gptel-menu)
+;;     (when evil-collection-gptel-want-shift-ret-to-send
+;;       (evil-collection-define-key '(normal visual) 'gptel-mode-map
+;;         (kbd "S-RET") 'gptel-send
+;;         (kbd "<S-return>") 'gptel-send)))
+
+;;   (with-eval-after-load 'gptel-context
+;;     (evil-collection-define-key 'normal 'gptel-context-buffer-mode-map
+;;       "j" 'gptel-context-next
+;;       "k" 'gptel-context-previous
+;;       "d" 'gptel-context-flag-deletion
+;;       "q" 'gptel-context-quit
+;;       "ZQ" 'gptel-context-quit
+;;       "ZZ" 'gptel-context-confirm
+;;       "RET" 'gptel-context-visit)))
+
+;; (provide 'evil-collection-gptel)
+
+
+;;; evil-collection-gptel.el ends here
